@@ -487,11 +487,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cylindersPassed: 1
+  cameraTarget: {fileID: 862453705}
   startPosition: {x: 0, y: 0.5, z: 0}
   color: {r: 0, g: 0, b: 0, a: 0}
   cylinderPrefab: {fileID: 679849007197825627, guid: 4e6b9fc0a7cd1ee4185e2244c927074b,
     type: 3}
-  cameraTarget: {fileID: 862453705}
   internalCircle: {fileID: 1207021847}
   prepareCylinderTime: 0.2
   moveUpStep: 1
@@ -502,7 +502,8 @@ MonoBehaviour:
   scaleAcceleration: 1
   increaseSpeedCylindersThreshold: 5
   triesAmount: 3
-  currentGameState: 0
+  tapAccuracy: 0.2
+  currentCylinderTowerState: 0
 --- !u!1 &860447520
 GameObject:
   m_ObjectHideFlags: 0
@@ -837,6 +838,51 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1823333985
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1823333987}
+  - component: {fileID: 1823333986}
+  m_Layer: 0
+  m_Name: EndClipPlayer
+  m_TagString: EndClipPlayer
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1823333986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1823333985}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba348a8e96b86ea4c9f54fcab2f30198, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CameraTargetSpeed: 0
+  basicCameraDistanceBasicHeightRelation: 3
+--- !u!4 &1823333987
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1823333985}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1938940722 stripped
 Transform:

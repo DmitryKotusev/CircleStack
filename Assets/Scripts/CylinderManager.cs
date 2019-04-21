@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,14 +7,15 @@ public class CylinderManager : MonoBehaviour
 {
     [SerializeField]
     uint cylindersPassed = 1;
+    [SerializeField]
+    GameObject cameraTarget;
 
     public Vector3 startPosition = new Vector3(0, 0.5f, 0);
     public Color color;
     public GameObject cylinderPrefab;
-    public GameObject cameraTarget;
     public GameObject internalCircle;
     public float prepareCylinderTime = 1f;
-    public int moveUpStep = 1;
+    public float moveUpStep = 1;
     public float minScale;
     public float startMaxScale = 5f;
     public float maxScaleMultiplier = 1.2f;
@@ -21,6 +23,7 @@ public class CylinderManager : MonoBehaviour
     public float scaleAcceleration = 1f;
     public uint increaseSpeedCylindersThreshold = 5;
     public uint triesAmount = 5;
+    public float tapAccuracy = 0.1f;
 
     private Vector3 currentPosition;
     private bool isOutsideDirected = true;
@@ -31,12 +34,13 @@ public class CylinderManager : MonoBehaviour
     private InputController inputController;
     private GameObject currentCylinder;
     [SerializeField]
-    CylinderStates currentGameState;
+    CylinderStates currentCylinderTowerState;
 
     public void FixCylinder()
     {
-        if (currentGameState == CylinderStates.SCALING)
+        if (currentCylinderTowerState == CylinderStates.SCALING)
         {
+            ControlAccuracy();
             if (CheckIsGameOver())
             {
                 return;
@@ -44,6 +48,19 @@ public class CylinderManager : MonoBehaviour
             SetNewMaxScale(currentCylinder.transform.localScale.x);
             cylindersPassed++;
             PrepareNewCylinder();
+        }
+    }
+
+    private void ControlAccuracy()
+    {
+        Debug.Log("Current mistake: " + Mathf.Abs(currentCylinder.transform.localScale.x - currentMaxScale));
+        if (Mathf.Abs(currentCylinder.transform.localScale.x - currentMaxScale) < tapAccuracy)
+        {
+            currentCylinder.transform.localScale
+                = new Vector3(currentMaxScale, currentCylinder.transform.localScale.y, currentMaxScale);
+            // Place for sound and animation
+            // ...
+            //
         }
     }
 
@@ -98,10 +115,9 @@ public class CylinderManager : MonoBehaviour
         if (currentCylinder.transform.localScale.x < minScale
             || currentCylinder.transform.localScale.x > currentMaxScale)
         {
-            currentGameState = CylinderStates.GAME_OVER;
-            Debug.Log("Game over");
+            currentCylinderTowerState = CylinderStates.GAME_OVER;
         }
-        return currentGameState == CylinderStates.GAME_OVER;
+        return currentCylinderTowerState == CylinderStates.GAME_OVER;
     }
 
     private void Start()
@@ -116,7 +132,7 @@ public class CylinderManager : MonoBehaviour
 
     private void Update()
     {
-        switch (currentGameState)
+        switch (currentCylinderTowerState)
         {
             case CylinderStates.SCALING:
                 {
@@ -133,6 +149,9 @@ public class CylinderManager : MonoBehaviour
                 }
             case CylinderStates.GAME_OVER:
                 {
+                    Debug.Log("Tower height: " + GetCurrentTowerHeight());
+                    Debug.Log(cameraTarget.transform.position);
+                    enabled = false;
                     break;
                 }
         }
@@ -141,7 +160,7 @@ public class CylinderManager : MonoBehaviour
     private void PrepareNewCylinder()
     {
         // Transfer to preparing new cylinder state
-        currentGameState = CylinderStates.PREPARING_NEW_CYLINDER;
+        currentCylinderTowerState = CylinderStates.PREPARING_NEW_CYLINDER;
         timer.SetCountDown(prepareCylinderTime);
     }
 
@@ -173,7 +192,7 @@ public class CylinderManager : MonoBehaviour
     private void ShowNewCylinder()
     {
         // Transfer to scaling state
-        currentGameState = CylinderStates.SCALING;
+        currentCylinderTowerState = CylinderStates.SCALING;
         isOutsideDirected = true;
         currentTry = triesAmount;
         currentPosition += new Vector3(0, moveUpStep, 0);
@@ -191,6 +210,21 @@ public class CylinderManager : MonoBehaviour
 
     public CylinderStates GetCylinderState()
     {
-        return currentGameState;
+        return currentCylinderTowerState;
+    }
+
+    public GameObject GetCameraTarget()
+    {
+        return cameraTarget;
+    }
+
+    public float GetCurrentTowerHeight()
+    {
+        return Vector3.Distance(currentPosition, transform.position) + moveUpStep / 2;
+    }
+
+    public Transform GetCameraTargetTransform()
+    {
+        return cameraTarget.transform;
     }
 }
