@@ -15,6 +15,12 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
+        CheckCylinderTowerInput();
+    }
+
+    private void CheckCylinderTowerInput()
+    {
+        if (cylinderManager.GetCylinderState() != CylinderStates.GAME_OVER)
         if (inputController.leftMouseButtonClick)
         {
             cylinderManager.FixCylinder();

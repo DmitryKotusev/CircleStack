@@ -69,23 +69,23 @@ public class CylinderManager : MonoBehaviour
     {
         if (currentTry == 1)
         {
-            if (!CheckScaleIsInWithInBorders(currentCylinder.transform,
-            new Vector3(lowerBorder, currentCylinder.transform.localScale.y, lowerBorder),
-            new Vector3(upperBorder, currentCylinder.transform.localScale.y, upperBorder)))
+            if (!CheckScaleIsInWithInBorders(
+            lowerBorder,
+            upperBorder))
             {
                 CheckIsGameOver();
             }
         }
     }
 
-    private bool CheckScaleIsInWithInBorders(Transform cylinderTransform, Vector3 lowerBorder, Vector3 upperBorder)
+    private bool CheckScaleIsInWithInBorders(float lowerBorder, float upperBorder)
     {
-        return !(cylinderTransform.localScale.x >= lowerBorder.x && cylinderTransform.localScale.x <= upperBorder.x);
+        return !(currentCylinder.transform.localScale.x >= lowerBorder && currentCylinder.transform.localScale.x <= upperBorder);
     }
 
-    private void CheckTryFinish(Transform cylinderTransform, Vector3 toCompareWith)
+    private void CheckTryFinish(float toCompareWith)
     {
-        if (cylinderTransform.localScale
+        if (currentCylinder.transform.localScale.x
                 == toCompareWith)
         {
             isOutsideDirected = !isOutsideDirected;
@@ -154,14 +154,13 @@ public class CylinderManager : MonoBehaviour
             {
                 CheckFinalTryIsGameOver(currentMaxScale, currentMaxScale * maxScaleMultiplier);
 
-                CheckTryFinish(currentCylinder.transform, new Vector3(currentMaxScale * maxScaleMultiplier,
-                    currentCylinder.transform.localScale.y, currentMaxScale * maxScaleMultiplier));
+                CheckTryFinish(currentMaxScale * maxScaleMultiplier);
             }
             else
             {
                 CheckFinalTryIsGameOver(0, minScale);
 
-                CheckTryFinish(currentCylinder.transform, new Vector3(0, currentCylinder.transform.localScale.y, 0));
+                CheckTryFinish(0);
             }
         }
     }
