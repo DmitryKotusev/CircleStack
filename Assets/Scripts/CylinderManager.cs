@@ -7,6 +7,7 @@ public class CylinderManager : MonoBehaviour
     [SerializeField]
     uint cylindersPassed = 1;
 
+    public Vector3 startPosition = new Vector3(0, 0.5f, 0);
     public Color color;
     public GameObject cylinderPrefab;
     public GameObject cameraTarget;
@@ -46,20 +47,20 @@ public class CylinderManager : MonoBehaviour
         }
     }
 
-    void ScaleCylinder(Transform cylinderTransform)
+    void ScaleCylinder()
     {
         Vector3 newScale;
         if (isOutsideDirected)
         {
-            newScale = cylinderTransform.localScale
+            newScale = currentCylinder.transform.localScale
                 + new Vector3(currentScaleSpeed * Time.deltaTime, 0, currentScaleSpeed * Time.deltaTime);
-            cylinderTransform.localScale = new Vector3(Mathf.Clamp(newScale.x, 0, currentMaxScale * maxScaleMultiplier),
+            currentCylinder.transform.localScale = new Vector3(Mathf.Clamp(newScale.x, 0, currentMaxScale * maxScaleMultiplier),
                 newScale.y, Mathf.Clamp(newScale.z, 0, currentMaxScale * maxScaleMultiplier));
             return;
         }
-        newScale = cylinderTransform.localScale
+        newScale = currentCylinder.transform.localScale
                 - new Vector3(currentScaleSpeed * Time.deltaTime, 0, currentScaleSpeed * Time.deltaTime);
-        cylinderTransform.localScale = new Vector3(Mathf.Clamp(newScale.x, 0, currentMaxScale * maxScaleMultiplier),
+        currentCylinder.transform.localScale = new Vector3(Mathf.Clamp(newScale.x, 0, currentMaxScale * maxScaleMultiplier),
             newScale.y, Mathf.Clamp(newScale.z, 0, currentMaxScale * maxScaleMultiplier));
         return;
     }
@@ -107,7 +108,7 @@ public class CylinderManager : MonoBehaviour
     {
         timer = gameObject.AddComponent<Timer>();
         inputController = GameObject.FindGameObjectWithTag("InputController").GetComponent<InputController>();
-        currentPosition = gameObject.transform.GetChild(0).transform.position;
+        currentPosition = startPosition;
         currentScaleSpeed = startScaleSpeed;
         internalCircle.transform.localScale = new Vector3(minScale, internalCircle.transform.localScale.y, minScale);
         ShowNewCylinder();
@@ -115,7 +116,7 @@ public class CylinderManager : MonoBehaviour
 
     private void Update()
     {
-        switch(currentGameState)
+        switch (currentGameState)
         {
             case CylinderStates.SCALING:
                 {
@@ -139,6 +140,7 @@ public class CylinderManager : MonoBehaviour
 
     private void PrepareNewCylinder()
     {
+        // Transfer to preparing new cylinder state
         currentGameState = CylinderStates.PREPARING_NEW_CYLINDER;
         timer.SetCountDown(prepareCylinderTime);
     }
@@ -147,7 +149,7 @@ public class CylinderManager : MonoBehaviour
     {
         if (currentTry > 0)
         {
-            ScaleCylinder(currentCylinder.transform);
+            ScaleCylinder();
             if (isOutsideDirected)
             {
                 CheckFinalTryIsGameOver(currentMaxScale, currentMaxScale * maxScaleMultiplier);
@@ -171,6 +173,7 @@ public class CylinderManager : MonoBehaviour
 
     private void ShowNewCylinder()
     {
+        // Transfer to scaling state
         currentGameState = CylinderStates.SCALING;
         isOutsideDirected = true;
         currentTry = triesAmount;
