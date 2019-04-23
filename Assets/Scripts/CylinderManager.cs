@@ -95,7 +95,10 @@ public class CylinderManager : MonoBehaviour
             lowerBorder,
             upperBorder))
             {
-                CheckIsGameOver();
+                if (CheckIsGameOver())
+                {
+                    currentTry = 0;
+                }
             }
         }
     }
@@ -257,5 +260,15 @@ public class CylinderManager : MonoBehaviour
     public void ResetCameraTargetPosition()
     {
         cameraTarget.transform.position = startCameraTargetPosition;
+    }
+
+    public int GetCylinderAmount()
+    {
+        return newCylindersContainer.transform.childCount - 1;
+    }
+
+    public uint GetCurrentTry()
+    {
+        return currentTry;
     }
 }

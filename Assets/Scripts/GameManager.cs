@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -13,6 +14,8 @@ public class GameManager : MonoBehaviour
     ClipPlayer endClipPlayer;
     ClipPlayer restartClipPlayer;
 
+    public Text cylinderScore;
+    public Text currentTry;
     public CinemachineVirtualCamera cinemachineVirtualCamera;
     public Vector3 cinemachineStartOffset;
 
@@ -30,6 +33,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
+        ShowUIInfo();
         switch (gameState)
         {
             case GameStates.PLAYING:
@@ -87,6 +91,12 @@ public class GameManager : MonoBehaviour
                     break;
                 }
         }
+    }
+
+    private void ShowUIInfo()
+    {
+        cylinderScore.text = cylinderManager.GetCylinderAmount().ToString();
+        currentTry.text = cylinderManager.GetCurrentTry().ToString();
     }
 
     private void OnEndClipPlayed()
