@@ -10,8 +10,8 @@ public class GameManager : MonoBehaviour
     GameStates gameState;
     CylinderManager cylinderManager;
     InputController inputController;
-    EndClipPlayer endClipPlayer;
-    RestartClipPlayer restartClipPlayer;
+    ClipPlayer endClipPlayer;
+    ClipPlayer restartClipPlayer;
 
     public CinemachineVirtualCamera cinemachineVirtualCamera;
     public Vector3 cinemachineStartOffset;
@@ -22,8 +22,8 @@ public class GameManager : MonoBehaviour
         cylinderManager = GameObject.FindGameObjectWithTag("CylinderManager").GetComponent<CylinderManager>();
         cylinderManager.GameOver += OnCylinderManagerGameOver;
         inputController = GameObject.FindGameObjectWithTag("InputController").GetComponent<InputController>();
-        endClipPlayer = GameObject.FindGameObjectWithTag("EndClipPlayer").GetComponent<EndClipPlayer>();
-        restartClipPlayer = GameObject.FindGameObjectWithTag("RestartClipPlayer").GetComponent<RestartClipPlayer>();
+        endClipPlayer = GameObject.FindGameObjectWithTag("EndClipPlayer").GetComponent<ClipPlayer>();
+        restartClipPlayer = GameObject.FindGameObjectWithTag("RestartClipPlayer").GetComponent<ClipPlayer>();
         CinemachineTransposer cinemachineTransposer = cinemachineVirtualCamera.GetCinemachineComponent<CinemachineTransposer>();
         cinemachineTransposer.m_FollowOffset = cinemachineStartOffset;
     }
