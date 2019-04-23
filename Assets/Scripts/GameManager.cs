@@ -6,21 +6,24 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField]
     GameStates gameState;
     CylinderManager cylinderManager;
     InputController inputController;
     EndClipPlayer endClipPlayer;
+    RestartClipPlayer restartClipPlayer;
 
     public CinemachineVirtualCamera cinemachineVirtualCamera;
     public Vector3 cinemachineStartOffset;
-    public Vector3 cinemachineFinishOffset;
 
     private void Start()
     {
         gameState = GameStates.PLAYING;
         cylinderManager = GameObject.FindGameObjectWithTag("CylinderManager").GetComponent<CylinderManager>();
+        cylinderManager.GameOver += OnCylinderManagerGameOver;
         inputController = GameObject.FindGameObjectWithTag("InputController").GetComponent<InputController>();
         endClipPlayer = GameObject.FindGameObjectWithTag("EndClipPlayer").GetComponent<EndClipPlayer>();
+        restartClipPlayer = GameObject.FindGameObjectWithTag("RestartClipPlayer").GetComponent<RestartClipPlayer>();
         CinemachineTransposer cinemachineTransposer = cinemachineVirtualCamera.GetCinemachineComponent<CinemachineTransposer>();
         cinemachineTransposer.m_FollowOffset = cinemachineStartOffset;
     }
@@ -40,10 +43,9 @@ public class GameManager : MonoBehaviour
                 }
             case GameStates.REQUIRE_PLAYING_END_CLIP:
                 {
-                    endClipPlayer.ClipPlayed += OnClipPlayed;
+                    endClipPlayer.ClipPlayed += OnEndClipPlayed;
                     endClipPlayer.SetCylinderManager(cylinderManager);
                     endClipPlayer.SetCinemachineTransposer(cinemachineVirtualCamera.GetCinemachineComponent<CinemachineTransposer>());
-                    endClipPlayer.SetCinemachineFinishOffset(cinemachineFinishOffset);
                     endClipPlayer.SetCinemachineStartOffset(cinemachineStartOffset);
                     PlayEndClip();
                     gameState = GameStates.PLAYING_END_CLIP;
@@ -57,33 +59,75 @@ public class GameManager : MonoBehaviour
                 {
                     break;
                 }
+            case GameStates.REQUIRE_PLAYING_RESTART_CLIP:
+                {
+                    restartClipPlayer.ClipPlayed += OnRestartClipPlayed;
+                    restartClipPlayer.SetCylinderManager(cylinderManager);
+                    restartClipPlayer.SetCinemachineTransposer(cinemachineVirtualCamera.GetCinemachineComponent<CinemachineTransposer>());
+                    restartClipPlayer.SetCinemachineStartOffset(cinemachineStartOffset);
+                    PlayRestartClip();
+                    gameState = GameStates.PLAYING_RESTART_CLIP;
+                    break;
+                }
+            case GameStates.PLAYING_RESTART_CLIP:
+                {
+                    break;
+                }
+            case GameStates.REQUIRE_RESTART_CYLINDER_MANAGER:
+                {
+                    cylinderManager.Init();
+                    gameState = GameStates.PLAYING;
+                    Debug.Log("Game restarted");
+                    break;
+                }
+            case GameStates.REQUIRE_RESTART:
+                {
+                    ResetTower();
+                    gameState = GameStates.REQUIRE_PLAYING_RESTART_CLIP;
+                    break;
+                }
         }
     }
 
-    private void OnClipPlayed()
+    private void OnEndClipPlayed()
     {
-        endClipPlayer.ClipPlayed -= OnClipPlayed;
+        endClipPlayer.ClipPlayed -= OnEndClipPlayed;
         gameState = GameStates.NOT_PLAYING;
         Debug.Log("Game over");
     }
 
+    private void OnRestartClipPlayed()
+    {
+        restartClipPlayer.ClipPlayed -= OnRestartClipPlayed;
+        gameState = GameStates.REQUIRE_RESTART_CYLINDER_MANAGER;
+    }
+
+    private void ResetTower()
+    {
+        cylinderManager.CleanTower();
+        cylinderManager.ResetCameraTargetPosition();
+    }
+
     private void CheckCylinderTowerInput()
     {
-        if (cylinderManager.GetCylinderState() != CylinderStates.GAME_OVER)
+        if (inputController.leftMouseButtonClick)
         {
-            if (inputController.leftMouseButtonClick)
-            {
-                cylinderManager.FixCylinder();
-            }
+            cylinderManager.FixCylinder();
         }
-        else
-        {
-            gameState = GameStates.REQUIRE_PLAYING_END_CLIP;
-        }
+    }
+
+    private void OnCylinderManagerGameOver()
+    {
+        gameState = GameStates.REQUIRE_PLAYING_END_CLIP;
     }
 
     private void PlayEndClip()
     {
         endClipPlayer.enabled = true;
+    }
+
+    private void PlayRestartClip()
+    {
+        restartClipPlayer.enabled = true;
     }
 }

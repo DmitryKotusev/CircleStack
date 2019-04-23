@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 
-public class EndClipPlayer : MonoBehaviour
+public class RestartClipPlayer : MonoBehaviour
 {
     public float cameraTargetSpeed;
     // x = basicCameraDistance / basicHeight * currentTowerHeight
@@ -37,7 +37,7 @@ public class EndClipPlayer : MonoBehaviour
     void CountNewCameraTargetPosition()
     {
         Transform mainCameraTransform = GameObject.FindGameObjectWithTag("MainCamera").transform;
-        
+
         float currentTowerHeight = cylinderManager.GetCurrentTowerHeight();
 
         cameraTargetTransform = cylinderManager.GetCameraTargetTransform();
@@ -56,7 +56,7 @@ public class EndClipPlayer : MonoBehaviour
             requiredDistance = thresholdCameraDistance;
         }
 
-        newCameraTransposerFollowOffset =  requiredDirection * requiredDistance;
+        newCameraTransposerFollowOffset = requiredDirection * requiredDistance;
     }
 
     void ChangeCameraTransposerFollowOffset()

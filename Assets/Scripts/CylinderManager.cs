@@ -9,6 +9,8 @@ public class CylinderManager : MonoBehaviour
     uint cylindersPassed = 1;
     [SerializeField]
     GameObject cameraTarget;
+    [SerializeField]
+    GameObject newCylindersContainer;
 
     public Vector3 startPosition = new Vector3(0, 0.5f, 0);
     public Color color;
@@ -25,6 +27,9 @@ public class CylinderManager : MonoBehaviour
     public uint triesAmount = 5;
     public float tapAccuracy = 0.1f;
 
+    public event Action GameOver;
+
+    private Vector3 startCameraTargetPosition;
     private Vector3 currentPosition;
     private bool isOutsideDirected = true;
     private float currentScaleSpeed = 1f;
@@ -122,8 +127,18 @@ public class CylinderManager : MonoBehaviour
 
     private void Start()
     {
+        startCameraTargetPosition = cameraTarget.transform.position;
         timer = gameObject.AddComponent<Timer>();
         inputController = GameObject.FindGameObjectWithTag("InputController").GetComponent<InputController>();
+        Init();
+    }
+
+    public void Init()
+    {
+        internalCircle.SetActive(true);
+        enabled = true;
+        currentMaxScale = startMaxScale;
+        currentCylinderTowerState = CylinderStates.PREPARING_NEW_CYLINDER;
         currentPosition = startPosition;
         currentScaleSpeed = startScaleSpeed;
         internalCircle.transform.localScale = new Vector3(minScale, internalCircle.transform.localScale.y, minScale);
@@ -150,6 +165,7 @@ public class CylinderManager : MonoBehaviour
             case CylinderStates.GAME_OVER:
                 {
                     internalCircle.SetActive(false);
+                    GameOver?.Invoke();
                     Debug.Log("Tower height: " + GetCurrentTowerHeight());
                     Debug.Log(cameraTarget.transform.position);
                     enabled = false;
@@ -200,7 +216,7 @@ public class CylinderManager : MonoBehaviour
         currentCylinder = Instantiate(cylinderPrefab,
             currentPosition,
             cylinderPrefab.transform.rotation,
-            transform);
+            newCylindersContainer.transform);
         currentCylinder.transform.localScale = new Vector3(
             0,
             currentCylinder.transform.localScale.y,
@@ -227,5 +243,19 @@ public class CylinderManager : MonoBehaviour
     public Transform GetCameraTargetTransform()
     {
         return cameraTarget.transform;
+    }
+
+    public void CleanTower()
+    {
+        foreach (Transform child in newCylindersContainer.transform)
+        {
+            Destroy(child.gameObject);
+        }
+        currentPosition = startPosition;
+    }
+
+    public void ResetCameraTargetPosition()
+    {
+        cameraTarget.transform.position = startCameraTargetPosition;
     }
 }
