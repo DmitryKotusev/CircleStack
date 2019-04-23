@@ -9,9 +9,10 @@ public class EndClipPlayer : MonoBehaviour
     // x = basicCameraDistance / basicHeight * currentTowerHeight
     public float basicCameraDistance;
     public float basicHeight;
+    public float thresholdCameraDistance = 17;
     public event System.Action ClipPlayed;
 
-    private Vector3 newCameraTargetPosition;
+    private Vector3 newCameraTransposerFollowOffset;
     private Transform cameraTargetTransform;
     private CylinderManager cylinderManager;
     private CinemachineTransposer cinemachineTransposer;
@@ -22,13 +23,13 @@ public class EndClipPlayer : MonoBehaviour
     {
         basicCameraDistanceBasicHeightRelation = basicCameraDistance / basicHeight;
         CountNewCameraTargetPosition();
-        cinemachineTransposer.m_FollowOffset = cinemachineFinishOffset;
+        // cinemachineTransposer.m_FollowOffset = cinemachineFinishOffset;
     }
 
     private void Update()
     {
-        MoveCameraTarget();
-        if (cameraTargetTransform.position == newCameraTargetPosition)
+        ChangeCameraTransposerFollowOffset();
+        if (cinemachineTransposer.m_FollowOffset == newCameraTransposerFollowOffset)
         {
             FinishPlay();
         }
@@ -42,24 +43,29 @@ public class EndClipPlayer : MonoBehaviour
 
         cameraTargetTransform = cylinderManager.GetCameraTargetTransform();
 
-        Vector3 requiredDirection = (mainCameraTransform.position - new Vector3(
-            cylinderManager.startPosition.x,
-            mainCameraTransform.position.y,
-            cylinderManager.startPosition.z
-            )).normalized;
+        //Vector3 requiredDirection = (mainCameraTransform.position - new Vector3(
+        //    cylinderManager.startPosition.x,
+        //    mainCameraTransform.position.y,
+        //    cylinderManager.startPosition.z
+        //    )).normalized;
+
+        Vector3 requiredDirection = cinemachineTransposer.m_FollowOffset.normalized;
 
         float requiredDistance = basicCameraDistanceBasicHeightRelation * currentTowerHeight;
-        newCameraTargetPosition = new Vector3(
-            cylinderManager.startPosition.x,
-            currentTowerHeight / 2,
-            cylinderManager.startPosition.z
-            ) + requiredDirection * requiredDistance;
+        if (requiredDistance < thresholdCameraDistance)
+        {
+            requiredDistance = thresholdCameraDistance;
+        }
+
+        newCameraTransposerFollowOffset =  requiredDirection * requiredDistance;
     }
 
-    void MoveCameraTarget()
+    void ChangeCameraTransposerFollowOffset()
     {
-        cameraTargetTransform.position
-            = Vector3.MoveTowards(cameraTargetTransform.position, newCameraTargetPosition, cameraTargetSpeed * Time.deltaTime);
+        cinemachineTransposer.m_FollowOffset
+            = Vector3.MoveTowards(cinemachineTransposer.m_FollowOffset,
+            newCameraTransposerFollowOffset,
+            cameraTargetSpeed * Time.deltaTime);
     }
 
     public void SetCinemachineTransposer(CinemachineTransposer cinemachineTransposer)

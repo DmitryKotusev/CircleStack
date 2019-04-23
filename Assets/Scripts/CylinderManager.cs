@@ -149,6 +149,7 @@ public class CylinderManager : MonoBehaviour
                 }
             case CylinderStates.GAME_OVER:
                 {
+                    internalCircle.SetActive(false);
                     Debug.Log("Tower height: " + GetCurrentTowerHeight());
                     Debug.Log(cameraTarget.transform.position);
                     enabled = false;
