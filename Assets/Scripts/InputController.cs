@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class InputController : MonoBehaviour
 {
-    public bool leftMouseButtonClick = false;
+    public bool leftMouseButtonTouchClick = false;
 
     void Update()
     {
-        leftMouseButtonClick = Input.GetMouseButtonDown(0);
+        leftMouseButtonTouchClick = Input.GetMouseButtonDown(0) || (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began);
     }
 }

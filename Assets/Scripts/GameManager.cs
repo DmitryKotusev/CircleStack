@@ -70,6 +70,7 @@ public class GameManager : MonoBehaviour
                     restartClipPlayer.SetCinemachineTransposer(cinemachineVirtualCamera.GetCinemachineComponent<CinemachineTransposer>());
                     restartClipPlayer.SetCinemachineStartOffset(cinemachineStartOffset);
                     PlayRestartClip();
+                    cylinderScore.enabled = false;
                     gameState = GameStates.PLAYING_RESTART_CLIP;
                     break;
                 }
@@ -79,6 +80,7 @@ public class GameManager : MonoBehaviour
                 }
             case GameStates.REQUIRE_RESTART_CYLINDER_MANAGER:
                 {
+                    cylinderScore.enabled = true;
                     cylinderManager.Init();
                     gameState = GameStates.PLAYING;
                     Debug.Log("Game restarted");
@@ -120,7 +122,7 @@ public class GameManager : MonoBehaviour
 
     private void CheckCylinderTowerInput()
     {
-        if (inputController.leftMouseButtonClick)
+        if (inputController.leftMouseButtonTouchClick)
         {
             cylinderManager.FixCylinder();
         }

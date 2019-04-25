@@ -142,7 +142,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf85662203d56bf4c903812500400c0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  leftMouseButtonClick: 0
+  leftMouseButtonTouchClick: 0
 --- !u!4 &81674680
 Transform:
   m_ObjectHideFlags: 0
