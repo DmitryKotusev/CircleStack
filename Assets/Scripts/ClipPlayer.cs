@@ -5,11 +5,15 @@ using Cinemachine;
 
 public class ClipPlayer : MonoBehaviour
 {
-    public float cameraTargetSpeed;
+    [SerializeField]
+    float cameraTargetSpeed;
+
+    public float requiredTime;
     // x = basicCameraDistance / basicHeight * currentTowerHeight
     public float basicCameraDistance;
     public float basicHeight;
     public float thresholdCameraDistance = 17;
+    public float maxCameraDistance = 200f;
     public event System.Action ClipPlayed;
 
     private Vector3 newCameraTransposerFollowOffset;
@@ -54,6 +58,22 @@ public class ClipPlayer : MonoBehaviour
         if (requiredDistance < thresholdCameraDistance)
         {
             requiredDistance = thresholdCameraDistance;
+        }
+        if (requiredDistance > maxCameraDistance)
+        {
+            requiredDistance = maxCameraDistance;
+        }
+
+        Debug.Log(requiredDistance);
+
+        // Count camera target speed
+        if (cinemachineTransposer.m_FollowOffset.magnitude <= requiredDistance)
+        {
+            cameraTargetSpeed = requiredDistance / requiredTime;
+        }
+        else
+        {
+            cameraTargetSpeed = cinemachineTransposer.m_FollowOffset.magnitude / requiredTime;
         }
 
         newCameraTransposerFollowOffset = requiredDirection * requiredDistance;

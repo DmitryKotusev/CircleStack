@@ -5,7 +5,10 @@ using Cinemachine;
 
 public class RestartClipPlayer : MonoBehaviour
 {
-    public float cameraTargetSpeed;
+    [SerializeField]
+    float cameraTargetSpeed;
+
+    public float requiredTime;
     // x = basicCameraDistance / basicHeight * currentTowerHeight
     public float basicCameraDistance;
     public float basicHeight;
@@ -55,6 +58,9 @@ public class RestartClipPlayer : MonoBehaviour
         {
             requiredDistance = thresholdCameraDistance;
         }
+
+        // Count camera target speed
+        cameraTargetSpeed = requiredDistance / requiredTime;
 
         newCameraTransposerFollowOffset = requiredDirection * requiredDistance;
     }

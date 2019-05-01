@@ -116,6 +116,7 @@ public class GameManager : MonoBehaviour
 
     private void ResetTower()
     {
+        cylinderManager.ResetDefaultCylinderColor();
         cylinderManager.CleanTower();
         cylinderManager.ResetCameraTargetPosition();
     }

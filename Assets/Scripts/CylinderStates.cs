@@ -2,5 +2,5 @@
 {
     PREPARING_NEW_CYLINDER,
     SCALING,
-    GAME_OVER,
+    GAME_OVER
 }

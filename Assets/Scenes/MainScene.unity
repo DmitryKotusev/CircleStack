@@ -271,7 +271,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 180287671}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
@@ -594,7 +594,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 707294760}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
@@ -654,6 +654,7 @@ GameObject:
   m_Component:
   - component: {fileID: 764827228}
   - component: {fileID: 764827229}
+  - component: {fileID: 764827230}
   m_Layer: 0
   m_Name: CylinderTower
   m_TagString: CylinderManager
@@ -676,7 +677,6 @@ Transform:
   - {fileID: 1207021848}
   - {fileID: 1938940722}
   - {fileID: 1862483521}
-  - {fileID: 1419711795}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -695,6 +695,8 @@ MonoBehaviour:
   cylindersPassed: 1
   cameraTarget: {fileID: 862453705}
   newCylindersContainer: {fileID: 1862483520}
+  originalMaterial: {fileID: 2100000, guid: ff66d990d768b894c83daa7beef3879c, type: 2}
+  defaultCylinder: {fileID: 1148916141}
   startPosition: {x: 0, y: 0.5, z: 0}
   color: {r: 0, g: 0, b: 0, a: 0}
   cylinderPrefab: {fileID: 679849007197825627, guid: 4e6b9fc0a7cd1ee4185e2244c927074b,
@@ -709,8 +711,33 @@ MonoBehaviour:
   scaleAcceleration: 1
   increaseSpeedCylindersThreshold: 5
   triesAmount: 3
-  tapAccuracy: 0.1
-  currentCylinderTowerState: 0
+  tapAccuracy: 0.3
+  currentCylinderTowerState: 2
+--- !u!114 &764827230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 764827227}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 389b0d9baa867c1469235a4499f8bd48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  r: 0
+  g: 0
+  b: 0
+  directionRedFlag: 0
+  directionGreenFlag: 0
+  directionBlueFlag: 0
+  colorChangeStep: 10
+  minRValue: 0
+  minGValue: 0
+  minBValue: 0
+  maxRValue: 255
+  maxGValue: 255
+  maxBValue: 255
 --- !u!1 &860447520
 GameObject:
   m_ObjectHideFlags: 0
@@ -740,7 +767,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cbcbf7dc6a073944b973a5b67e123a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameState: 0
+  gameState: 4
   cylinderScore: {fileID: 707294762}
   currentTry: {fileID: 180287673}
   cinemachineVirtualCamera: {fileID: 1232402080}
@@ -785,7 +812,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 3.7, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 1419711795}
   m_Father: {fileID: 764827228}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -889,6 +917,12 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!1 &1148916141 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 679849007197825627, guid: 4e6b9fc0a7cd1ee4185e2244c927074b,
+    type: 3}
+  m_PrefabInstance: {fileID: 679849005831440746}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1184131890
 GameObject:
   m_ObjectHideFlags: 0
@@ -1061,12 +1095,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1419711794}
-  m_LocalRotation: {x: 1, y: 0, z: 0, w: 0}
-  m_LocalPosition: {x: 0, y: -1.48, z: 10.44}
+  m_LocalRotation: {x: 1, y: -0, z: -0, w: 0}
+  m_LocalPosition: {x: 0, y: -5.1800003, z: 10.44}
   m_LocalScale: {x: 0.8352653, y: 0.8352653, z: 0.8352653}
   m_Children: []
-  m_Father: {fileID: 764827228}
-  m_RootOrder: 4
+  m_Father: {fileID: 862453706}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 180, y: 0, z: 0}
 --- !u!199 &1419711796
 ParticleSystemRenderer:
@@ -1203,7 +1237,7 @@ ParticleSystem:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-  moveWithTransform: 0
+  moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
   randomSeed: 0
@@ -5872,9 +5906,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraTargetSpeed: 50
+  requiredTime: 3
   basicCameraDistance: 17
   basicHeight: 6
   thresholdCameraDistance: 17
+  maxCameraDistance: 200
 --- !u!1 &1674716490
 GameObject:
   m_ObjectHideFlags: 0
@@ -6011,9 +6047,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraTargetSpeed: 50
+  requiredTime: 3
   basicCameraDistance: 17
   basicHeight: 6
   thresholdCameraDistance: 17
+  maxCameraDistance: 200
 --- !u!1 &1862483520
 GameObject:
   m_ObjectHideFlags: 0

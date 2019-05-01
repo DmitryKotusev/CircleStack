@@ -11,6 +11,10 @@ public class CylinderManager : MonoBehaviour
     GameObject cameraTarget;
     [SerializeField]
     GameObject newCylindersContainer;
+    [SerializeField]
+    Material originalMaterial;
+    [SerializeField]
+    GameObject defaultCylinder;
 
     public Vector3 startPosition = new Vector3(0, 0.5f, 0);
     public Color color;
@@ -37,6 +41,7 @@ public class CylinderManager : MonoBehaviour
     private uint currentTry;
     private Timer timer;
     private InputController inputController;
+    private ColorGenerator colorGenerator;
     private GameObject currentCylinder;
     [SerializeField]
     CylinderStates currentCylinderTowerState;
@@ -58,7 +63,7 @@ public class CylinderManager : MonoBehaviour
 
     private void ControlAccuracy()
     {
-        Debug.Log("Current mistake: " + Mathf.Abs(currentCylinder.transform.localScale.x - currentMaxScale));
+        // Debug.Log("Current mistake: " + Mathf.Abs(currentCylinder.transform.localScale.x - currentMaxScale));
         if (Mathf.Abs(currentCylinder.transform.localScale.x - currentMaxScale) < tapAccuracy)
         {
             currentCylinder.transform.localScale
@@ -133,7 +138,10 @@ public class CylinderManager : MonoBehaviour
         startCameraTargetPosition = cameraTarget.transform.position;
         timer = gameObject.AddComponent<Timer>();
         inputController = GameObject.FindGameObjectWithTag("InputController").GetComponent<InputController>();
-        Init();
+        colorGenerator = GetComponent<ColorGenerator>();
+        colorGenerator.ResetGenerator();
+        // SetNewMaterialToObject(defaultCylinder);
+        // Init();
     }
 
     public void Init()
@@ -144,7 +152,9 @@ public class CylinderManager : MonoBehaviour
         currentCylinderTowerState = CylinderStates.PREPARING_NEW_CYLINDER;
         currentPosition = startPosition;
         currentScaleSpeed = startScaleSpeed;
+
         internalCircle.transform.localScale = new Vector3(minScale, internalCircle.transform.localScale.y, minScale);
+
         ShowNewCylinder();
     }
 
@@ -224,8 +234,18 @@ public class CylinderManager : MonoBehaviour
             0,
             currentCylinder.transform.localScale.y,
             0);
+        // Material setting
+        SetNewMaterialToObject(currentCylinder);
+        // Material setting end
         cameraTarget.transform.position = currentPosition;
         internalCircle.transform.position = currentPosition;
+    }
+
+    private void SetNewMaterialToObject(GameObject currentCylinder)
+    {
+        Renderer rend = currentCylinder.GetComponent<Renderer>();
+        rend.material = new Material(originalMaterial);
+        rend.material.color = colorGenerator.GenerateNewColor();
     }
 
     public CylinderStates GetCylinderState()
@@ -246,6 +266,12 @@ public class CylinderManager : MonoBehaviour
     public Transform GetCameraTargetTransform()
     {
         return cameraTarget.transform;
+    }
+
+    public void ResetDefaultCylinderColor()
+    {
+        colorGenerator.ResetGenerator();
+        SetNewMaterialToObject(defaultCylinder);
     }
 
     public void CleanTower()
