@@ -18,10 +18,20 @@ public class GameManager : MonoBehaviour
     public Text currentTry;
     public CinemachineVirtualCamera cinemachineVirtualCamera;
     public Vector3 cinemachineStartOffset;
+    public GameObject initButton;
+    public Text initButtonText;
+    public string restartText = "Tap\to\nRestart";
+
+    public void RestartGame()
+    {
+        initButton.SetActive(false);
+        initButtonText.text = restartText;
+        gameState = GameStates.REQUIRE_RESTART;
+    }
 
     private void Start()
     {
-        gameState = GameStates.PLAYING;
+        // gameState = GameStates.PLAYING;
         cylinderManager = GameObject.FindGameObjectWithTag("CylinderManager").GetComponent<CylinderManager>();
         cylinderManager.GameOver += OnCylinderManagerGameOver;
         inputController = GameObject.FindGameObjectWithTag("InputController").GetComponent<InputController>();
@@ -104,6 +114,7 @@ public class GameManager : MonoBehaviour
     private void OnEndClipPlayed()
     {
         endClipPlayer.ClipPlayed -= OnEndClipPlayed;
+        initButton.SetActive(true);
         gameState = GameStates.NOT_PLAYING;
         Debug.Log("Game over");
     }
