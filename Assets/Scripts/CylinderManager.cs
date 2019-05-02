@@ -15,6 +15,11 @@ public class CylinderManager : MonoBehaviour
     Material originalMaterial;
     [SerializeField]
     GameObject defaultCylinder;
+    [SerializeField]
+    GameObject particleNReachPrefab;
+    [SerializeField]
+    GameObject particleAccuracySatisfy;
+    public float particlesDestroyTime = 2f;
 
     public Vector3 startPosition = new Vector3(0, 0.5f, 0);
     public Color color;
@@ -22,20 +27,29 @@ public class CylinderManager : MonoBehaviour
     public GameObject internalCircle;
     public float prepareCylinderTime = 1f;
     public float moveUpStep = 1;
+    public float cylinderBaseRadius = 0.5f;
     public float minScale;
     public float startMaxScale = 5f;
     public float maxScaleMultiplier = 1.2f;
     public float startScaleSpeed = 1f;
     public float scaleAcceleration = 1f;
+    public float maxScaleSpeed = 8f;
     public uint increaseSpeedCylindersThreshold = 5;
     public uint triesAmount = 5;
     public float tapAccuracy = 0.1f;
 
+    public uint increaseSpeedThreshold = 7;
+    public uint boostThreshold = 5;
+    public float boostAmount = 0.4f;
+
     public event Action GameOver;
 
+    private uint increaseScaleSpeedCounter = 0;
+    private uint boostCounter = 0;
     private Vector3 startCameraTargetPosition;
     private Vector3 currentPosition;
     private bool isOutsideDirected = true;
+    [SerializeField]
     private float currentScaleSpeed = 1f;
     private float currentMaxScale = 5f;
     private uint currentTry;
@@ -55,10 +69,21 @@ public class CylinderManager : MonoBehaviour
             {
                 return;
             }
+            increaseScaleSpeedCounter++;
+            if (increaseScaleSpeedCounter >= increaseSpeedThreshold)
+            {
+                increaseScaleSpeedCounter = 0;
+                IncreaseSpeed();
+            }
             SetNewMaxScale(currentCylinder.transform.localScale.x);
             cylindersPassed++;
             PrepareNewCylinder();
         }
+    }
+
+    private void IncreaseSpeed()
+    {
+        currentScaleSpeed = Mathf.Clamp(scaleAcceleration + currentScaleSpeed, startScaleSpeed, maxScaleSpeed);
     }
 
     private void ControlAccuracy()
@@ -66,12 +91,55 @@ public class CylinderManager : MonoBehaviour
         // Debug.Log("Current mistake: " + Mathf.Abs(currentCylinder.transform.localScale.x - currentMaxScale));
         if (Mathf.Abs(currentCylinder.transform.localScale.x - currentMaxScale) < tapAccuracy)
         {
+            boostCounter++;
+            if (boostCounter >= boostThreshold)
+            {
+                boostCounter = 0;
+                BoostScale();
+                // Тут происходит награда за n раз подряд
+                BoostParticlesReward();
+            }
+            else
+            {
+                AccuracySatisfyReward();
+            }
             currentCylinder.transform.localScale
                 = new Vector3(currentMaxScale, currentCylinder.transform.localScale.y, currentMaxScale);
             // Place for sound and animation
             // ...
             //
         }
+        else
+        {
+            boostCounter = 0;
+        }
+    }
+
+    private void BoostParticlesReward()
+    {
+        GameObject particlesClone = Instantiate(particleNReachPrefab,
+            currentPosition - new Vector3(0, moveUpStep / 2, 0),
+            particleNReachPrefab.transform.rotation);
+        ParticleSystem particleSystem = particlesClone.GetComponent<ParticleSystem>();
+        var shapeSettings = particleSystem.shape;
+        shapeSettings.radius = cylinderBaseRadius * currentMaxScale;
+        Destroy(particlesClone, particlesDestroyTime);
+    }
+
+    private void AccuracySatisfyReward()
+    {
+        GameObject particlesClone = Instantiate(particleAccuracySatisfy,
+            currentPosition - new Vector3(0, moveUpStep / 2, 0),
+            particleAccuracySatisfy.transform.rotation);
+        ParticleSystem particleSystem = particlesClone.GetComponent<ParticleSystem>();
+        var shapeSettings = particleSystem.shape;
+        shapeSettings.radius = cylinderBaseRadius * currentMaxScale;
+        Destroy(particlesClone, particlesDestroyTime);
+    }
+
+    private void BoostScale()
+    {
+        currentMaxScale = Mathf.Clamp(currentMaxScale + boostAmount, minScale, startMaxScale);
     }
 
     void ScaleCylinder()
@@ -139,7 +207,9 @@ public class CylinderManager : MonoBehaviour
         timer = gameObject.AddComponent<Timer>();
         inputController = GameObject.FindGameObjectWithTag("InputController").GetComponent<InputController>();
         colorGenerator = GetComponent<ColorGenerator>();
-        colorGenerator.ResetGenerator();
+        boostCounter = 0;
+        increaseScaleSpeedCounter = 0;
+        // colorGenerator.ResetGenerator();
         // SetNewMaterialToObject(defaultCylinder);
         // Init();
     }
@@ -181,6 +251,12 @@ public class CylinderManager : MonoBehaviour
                     GameOver?.Invoke();
                     Debug.Log("Tower height: " + GetCurrentTowerHeight());
                     Debug.Log(cameraTarget.transform.position);
+                    enabled = false;
+                    break;
+                }
+            case CylinderStates.NOT_STARTED:
+                {
+                    internalCircle.SetActive(false);
                     enabled = false;
                     break;
                 }

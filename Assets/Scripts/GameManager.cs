@@ -18,15 +18,20 @@ public class GameManager : MonoBehaviour
     public Text currentTry;
     public CinemachineVirtualCamera cinemachineVirtualCamera;
     public Vector3 cinemachineStartOffset;
-    public GameObject initButton;
-    public Text initButtonText;
-    public string restartText = "Tap\to\nRestart";
+    public GameObject restartButton;
+    public GameObject startButton;
+    // public string restartText = "Tap\to\nRestart";
 
     public void RestartGame()
     {
-        initButton.SetActive(false);
-        initButtonText.text = restartText;
+        restartButton.SetActive(false);
         gameState = GameStates.REQUIRE_RESTART;
+    }
+
+    public void StartGame()
+    {
+        startButton.SetActive(false);
+        gameState = GameStates.REQUIRE_START;
     }
 
     private void Start()
@@ -46,6 +51,17 @@ public class GameManager : MonoBehaviour
         ShowUIInfo();
         switch (gameState)
         {
+            case GameStates.APP_STARTED:
+                {
+                    ResetTower();
+                    gameState = GameStates.NOT_PLAYING;
+                    break;
+                }
+            case GameStates.REQUIRE_START:
+                {
+                    gameState = GameStates.REQUIRE_PLAYING_RESTART_CLIP;
+                    break;
+                }
             case GameStates.PLAYING:
                 {
                     CheckCylinderTowerInput();
@@ -107,14 +123,14 @@ public class GameManager : MonoBehaviour
 
     private void ShowUIInfo()
     {
-        cylinderScore.text = cylinderManager.GetCylinderAmount().ToString();
+        cylinderScore.text = cylinderManager.GetCylinderAmount() >= 0 ? cylinderManager.GetCylinderAmount().ToString() : "0";
         currentTry.text = cylinderManager.GetCurrentTry().ToString();
     }
 
     private void OnEndClipPlayed()
     {
         endClipPlayer.ClipPlayed -= OnEndClipPlayed;
-        initButton.SetActive(true);
+        restartButton.SetActive(true);
         gameState = GameStates.NOT_PLAYING;
         Debug.Log("Game over");
     }

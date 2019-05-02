@@ -1,5 +1,7 @@
 ﻿public enum GameStates
 {
+    APP_STARTED,
+    REQUIRE_START,
     PLAYING,
     PAUSE,
     REQUIRE_PLAYING_END_CLIP,
