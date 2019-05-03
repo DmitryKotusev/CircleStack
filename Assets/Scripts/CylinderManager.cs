@@ -6,6 +6,24 @@ using UnityEngine;
 public class CylinderManager : MonoBehaviour
 {
     [SerializeField]
+    public AudioClip missAccuracyClip;
+    [SerializeField]
+    public AudioClip gotAccuracy1Clip;
+    [SerializeField]
+    public AudioClip gotAccuracy2Clip;
+    [SerializeField]
+    public AudioClip gotAccuracy3Clip;
+    [SerializeField]
+    public AudioClip gotAccuracy4Clip;
+    [SerializeField]
+    public AudioClip gotAccuracy5Clip;
+    [SerializeField]
+    public AudioClip gotAccuracy6Clip;
+    [SerializeField]
+    public AudioClip gotAccuracy7Clip;
+    [SerializeField]
+    public AudioClip loseClip;
+    [SerializeField]
     uint cylindersPassed = 1;
     [SerializeField]
     GameObject cameraTarget;
@@ -18,8 +36,11 @@ public class CylinderManager : MonoBehaviour
     [SerializeField]
     GameObject particleNReachPrefab;
     [SerializeField]
-    GameObject particleAccuracySatisfy;
+    GameObject textureAccuracySatisfy;
+    [SerializeField]
+    float textureStepScaleMultiplier = 0.1f;
     public float particlesDestroyTime = 2f;
+    public float textureDestroyTime = 2f;
 
     public Vector3 startPosition = new Vector3(0, 0.5f, 0);
     public Color color;
@@ -51,12 +72,15 @@ public class CylinderManager : MonoBehaviour
     private bool isOutsideDirected = true;
     [SerializeField]
     private float currentScaleSpeed = 1f;
+    private float oldScaleSpeed;
+    private bool isPlayerHavingSpeedReward;
     private float currentMaxScale = 5f;
     private uint currentTry;
     private Timer timer;
     private InputController inputController;
     private ColorGenerator colorGenerator;
     private GameObject currentCylinder;
+    private AudioSource audioPlayer;
     [SerializeField]
     CylinderStates currentCylinderTowerState;
 
@@ -64,6 +88,13 @@ public class CylinderManager : MonoBehaviour
     {
         if (currentCylinderTowerState == CylinderStates.SCALING)
         {
+            if (isPlayerHavingSpeedReward)
+            {
+                // Reward turn off block
+                isPlayerHavingSpeedReward = false;
+                currentScaleSpeed = oldScaleSpeed;
+                ////////////////////////
+            }
             ControlAccuracy();
             if (CheckIsGameOver())
             {
@@ -73,7 +104,10 @@ public class CylinderManager : MonoBehaviour
             if (increaseScaleSpeedCounter >= increaseSpeedThreshold)
             {
                 increaseScaleSpeedCounter = 0;
-                IncreaseSpeed();
+                if (!isPlayerHavingSpeedReward)
+                {
+                    IncreaseSpeed();
+                }
             }
             SetNewMaxScale(currentCylinder.transform.localScale.x);
             cylindersPassed++;
@@ -98,10 +132,17 @@ public class CylinderManager : MonoBehaviour
                 BoostScale();
                 // Тут происходит награда за n раз подряд
                 BoostParticlesReward();
+                Play7ThClip();
+                // Speed reward
+                isPlayerHavingSpeedReward = true;
+                oldScaleSpeed = currentScaleSpeed;
+                currentScaleSpeed = startScaleSpeed;
             }
             else
             {
                 AccuracySatisfyReward();
+                // Итоговый звук
+                Play1Desh6Clips();
             }
             currentCylinder.transform.localScale
                 = new Vector3(currentMaxScale, currentCylinder.transform.localScale.y, currentMaxScale);
@@ -112,6 +153,105 @@ public class CylinderManager : MonoBehaviour
         else
         {
             boostCounter = 0;
+            // Звук промаха
+            PlayMissClip();
+        }
+    }
+
+    private void Play7ThClip()
+    {
+        if (gotAccuracy7Clip != null)
+        {
+            audioPlayer.Stop();
+            audioPlayer.clip = gotAccuracy7Clip;
+            audioPlayer.Play();
+        }
+    }
+
+    private void Play1Desh6Clips()
+    {
+        switch (boostCounter)
+        {
+            case 1:
+                {
+                    if (gotAccuracy1Clip != null)
+                    {
+                        audioPlayer.Stop();
+                        audioPlayer.clip = gotAccuracy1Clip;
+                        audioPlayer.Play();
+                    }
+                    break;
+                }
+            case 2:
+                {
+                    if (gotAccuracy2Clip != null)
+                    {
+                        audioPlayer.Stop();
+                        audioPlayer.clip = gotAccuracy2Clip;
+                        audioPlayer.Play();
+                    }
+                    break;
+                }
+            case 3:
+                {
+                    if (gotAccuracy3Clip != null)
+                    {
+                        audioPlayer.Stop();
+                        audioPlayer.clip = gotAccuracy3Clip;
+                        audioPlayer.Play();
+                    }
+                    break;
+                }
+            case 4:
+                {
+                    if (gotAccuracy4Clip != null)
+                    {
+                        audioPlayer.Stop();
+                        audioPlayer.clip = gotAccuracy4Clip;
+                        audioPlayer.Play();
+                    }
+                    break;
+                }
+            case 5:
+                {
+                    if (gotAccuracy5Clip != null)
+                    {
+                        audioPlayer.Stop();
+                        audioPlayer.clip = gotAccuracy5Clip;
+                        audioPlayer.Play();
+                    }
+                    break;
+                }
+            case 6:
+                {
+                    if (gotAccuracy6Clip != null)
+                    {
+                        audioPlayer.Stop();
+                        audioPlayer.clip = gotAccuracy6Clip;
+                        audioPlayer.Play();
+                    }
+                    break;
+                }
+        }
+    }
+
+    private void PlayLoseClip()
+    {
+        if (loseClip != null)
+        {
+            audioPlayer.Stop();
+            audioPlayer.clip = loseClip;
+            audioPlayer.Play();
+        }
+    }
+
+    private void PlayMissClip()
+    {
+        if (missAccuracyClip != null)
+        {
+            audioPlayer.Stop();
+            audioPlayer.clip = missAccuracyClip;
+            audioPlayer.Play();
         }
     }
 
@@ -128,13 +268,25 @@ public class CylinderManager : MonoBehaviour
 
     private void AccuracySatisfyReward()
     {
-        GameObject particlesClone = Instantiate(particleAccuracySatisfy,
+        GameObject textureClone = Instantiate(textureAccuracySatisfy,
             currentPosition - new Vector3(0, moveUpStep / 2, 0),
-            particleAccuracySatisfy.transform.rotation);
-        ParticleSystem particleSystem = particlesClone.GetComponent<ParticleSystem>();
-        var shapeSettings = particleSystem.shape;
-        shapeSettings.radius = cylinderBaseRadius * currentMaxScale;
-        Destroy(particlesClone, particlesDestroyTime);
+            textureAccuracySatisfy.transform.rotation);
+
+        textureClone.transform.localScale = new Vector3(
+            currentMaxScale * (1 + (boostCounter - 1) * textureStepScaleMultiplier),
+            1,
+            currentMaxScale * (1 + (boostCounter - 1) * textureStepScaleMultiplier));
+        Renderer textureRenderer = textureClone.transform.GetChild(0).GetChild(0).gameObject.GetComponent<Renderer>();
+        textureRenderer.material.color = new Color(
+            textureRenderer.material.color.r,
+            textureRenderer.material.color.g,
+            textureRenderer.material.color.b,
+            (float)boostCounter / (increaseSpeedThreshold - 1)
+            );
+        // ParticleSystem particleSystem = particlesClone.GetComponent<ParticleSystem>();
+        // var shapeSettings = particleSystem.shape;
+        // shapeSettings.radius = cylinderBaseRadius * currentMaxScale;
+        Destroy(textureClone, textureDestroyTime);
     }
 
     private void BoostScale()
@@ -197,6 +349,8 @@ public class CylinderManager : MonoBehaviour
             || currentCylinder.transform.localScale.x > currentMaxScale)
         {
             currentCylinderTowerState = CylinderStates.GAME_OVER;
+            // Звук поражения
+            PlayLoseClip();
         }
         return currentCylinderTowerState == CylinderStates.GAME_OVER;
     }
@@ -207,8 +361,10 @@ public class CylinderManager : MonoBehaviour
         timer = gameObject.AddComponent<Timer>();
         inputController = GameObject.FindGameObjectWithTag("InputController").GetComponent<InputController>();
         colorGenerator = GetComponent<ColorGenerator>();
+        audioPlayer = GetComponent<AudioSource>();
         boostCounter = 0;
         increaseScaleSpeedCounter = 0;
+        isPlayerHavingSpeedReward = false;
         // colorGenerator.ResetGenerator();
         // SetNewMaterialToObject(defaultCylinder);
         // Init();
