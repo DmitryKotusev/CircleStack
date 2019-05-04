@@ -10,6 +10,22 @@ public class CylinderManager : MonoBehaviour
     [SerializeField]
     public AudioClip gotAccuracy1Clip;
     [SerializeField]
+    private float deafultpitch = 1f;
+    [SerializeField]
+    private float pitch1Value = 1f;
+    [SerializeField]
+    private float pitch2Value = 1f;
+    [SerializeField]
+    private float pitch3Value = 1f;
+    [SerializeField]
+    private float pitch4Value = 1f;
+    [SerializeField]
+    private float pitch5Value = 1f;
+    [SerializeField]
+    private float pitch6Value = 1f;
+    [SerializeField]
+    private float pitch7Value = 1f;
+    [SerializeField]
     public AudioClip gotAccuracy2Clip;
     [SerializeField]
     public AudioClip gotAccuracy3Clip;
@@ -64,6 +80,7 @@ public class CylinderManager : MonoBehaviour
     public float boostAmount = 0.4f;
 
     public event Action GameOver;
+    // public event Action ChangeCylinderColor;
 
     private uint increaseScaleSpeedCounter = 0;
     private uint boostCounter = 0;
@@ -83,6 +100,11 @@ public class CylinderManager : MonoBehaviour
     private AudioSource audioPlayer;
     [SerializeField]
     CylinderStates currentCylinderTowerState;
+
+    public ColorGenerator GetColorGenerator()
+    {
+        return colorGenerator;
+    }
 
     public void FixCylinder()
     {
@@ -164,6 +186,7 @@ public class CylinderManager : MonoBehaviour
         {
             audioPlayer.Stop();
             audioPlayer.clip = gotAccuracy7Clip;
+            audioPlayer.pitch = pitch7Value;
             audioPlayer.Play();
         }
     }
@@ -178,6 +201,7 @@ public class CylinderManager : MonoBehaviour
                     {
                         audioPlayer.Stop();
                         audioPlayer.clip = gotAccuracy1Clip;
+                        audioPlayer.pitch = pitch1Value;
                         audioPlayer.Play();
                     }
                     break;
@@ -188,6 +212,7 @@ public class CylinderManager : MonoBehaviour
                     {
                         audioPlayer.Stop();
                         audioPlayer.clip = gotAccuracy2Clip;
+                        audioPlayer.pitch = pitch2Value;
                         audioPlayer.Play();
                     }
                     break;
@@ -198,6 +223,7 @@ public class CylinderManager : MonoBehaviour
                     {
                         audioPlayer.Stop();
                         audioPlayer.clip = gotAccuracy3Clip;
+                        audioPlayer.pitch = pitch3Value;
                         audioPlayer.Play();
                     }
                     break;
@@ -208,6 +234,7 @@ public class CylinderManager : MonoBehaviour
                     {
                         audioPlayer.Stop();
                         audioPlayer.clip = gotAccuracy4Clip;
+                        audioPlayer.pitch = pitch4Value;
                         audioPlayer.Play();
                     }
                     break;
@@ -218,6 +245,7 @@ public class CylinderManager : MonoBehaviour
                     {
                         audioPlayer.Stop();
                         audioPlayer.clip = gotAccuracy5Clip;
+                        audioPlayer.pitch = pitch5Value;
                         audioPlayer.Play();
                     }
                     break;
@@ -228,6 +256,7 @@ public class CylinderManager : MonoBehaviour
                     {
                         audioPlayer.Stop();
                         audioPlayer.clip = gotAccuracy6Clip;
+                        audioPlayer.pitch = pitch6Value;
                         audioPlayer.Play();
                     }
                     break;
@@ -241,6 +270,7 @@ public class CylinderManager : MonoBehaviour
         {
             audioPlayer.Stop();
             audioPlayer.clip = loseClip;
+            audioPlayer.pitch = deafultpitch;
             audioPlayer.Play();
         }
     }
@@ -251,6 +281,7 @@ public class CylinderManager : MonoBehaviour
         {
             audioPlayer.Stop();
             audioPlayer.clip = missAccuracyClip;
+            audioPlayer.pitch = deafultpitch;
             audioPlayer.Play();
         }
     }
@@ -478,6 +509,7 @@ public class CylinderManager : MonoBehaviour
         Renderer rend = currentCylinder.GetComponent<Renderer>();
         rend.material = new Material(originalMaterial);
         rend.material.color = colorGenerator.GenerateNewColor();
+        // ChangeCylinderColor?.Invoke();
     }
 
     public CylinderStates GetCylinderState()

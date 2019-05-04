@@ -9,11 +9,17 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField]
     GameStates gameState;
+    [SerializeField]
+    int maxScore;
     CylinderManager cylinderManager;
     InputController inputController;
     ClipPlayer endClipPlayer;
     ClipPlayer restartClipPlayer;
+    BackGroundColorChanger backGroundColorChanger;
+    FileDataController fileDataController;
 
+    public ParticleSystem backGroundParticles;
+    public Material backGroundMaterial;
     public Text cylinderScore;
     public Text currentTry;
     public CinemachineVirtualCamera cinemachineVirtualCamera;
@@ -39,9 +45,15 @@ public class GameManager : MonoBehaviour
         // gameState = GameStates.PLAYING;
         cylinderManager = GameObject.FindGameObjectWithTag("CylinderManager").GetComponent<CylinderManager>();
         cylinderManager.GameOver += OnCylinderManagerGameOver;
+        // cylinderManager.ChangeCylinderColor += OnChangeCylinderColor;
         inputController = GameObject.FindGameObjectWithTag("InputController").GetComponent<InputController>();
         endClipPlayer = GameObject.FindGameObjectWithTag("EndClipPlayer").GetComponent<ClipPlayer>();
         restartClipPlayer = GameObject.FindGameObjectWithTag("RestartClipPlayer").GetComponent<ClipPlayer>();
+        backGroundColorChanger = GameObject.FindGameObjectWithTag("BackGround").GetComponent<BackGroundColorChanger>();
+        backGroundColorChanger.SetBackGroundMaterial(backGroundMaterial);
+        backGroundColorChanger.SetBackGroundRandomStartColor();
+        fileDataController = GetComponent<FileDataController>();
+        maxScore = fileDataController.ReadMaxScore();
         CinemachineTransposer cinemachineTransposer = cinemachineVirtualCamera.GetCinemachineComponent<CinemachineTransposer>();
         cinemachineTransposer.m_FollowOffset = cinemachineStartOffset;
     }
@@ -139,6 +151,8 @@ public class GameManager : MonoBehaviour
     {
         restartClipPlayer.ClipPlayed -= OnRestartClipPlayed;
         gameState = GameStates.REQUIRE_RESTART_CYLINDER_MANAGER;
+        backGroundColorChanger.StartChanger();
+        backGroundParticles.Play();
     }
 
     private void ResetTower()
@@ -159,6 +173,20 @@ public class GameManager : MonoBehaviour
     private void OnCylinderManagerGameOver()
     {
         gameState = GameStates.REQUIRE_PLAYING_END_CLIP;
+        backGroundColorChanger.StopChanger();
+        backGroundParticles.Stop();
+        int currentScore = cylinderManager.GetCylinderAmount();
+        if (currentScore > maxScore)
+        {
+            fileDataController.SaveMaxScore(currentScore);
+            maxScore = currentScore;
+        }
+    }
+
+    private void OnChangeCylinderColor()
+    {
+        // Change color logic
+        backGroundMaterial.color = cylinderManager.GetColorGenerator().GetReverseColor();
     }
 
     private void PlayEndClip()

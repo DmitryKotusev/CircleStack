@@ -5,11 +5,11 @@ using UnityEngine;
 public class ColorGenerator : MonoBehaviour
 {
     [SerializeField]
-    int r;
+    float r;
     [SerializeField]
-    int g;
+    float g;
     [SerializeField]
-    int b;
+    float b;
     [SerializeField]
     bool directionRedFlag;
     [SerializeField]
@@ -38,76 +38,102 @@ public class ColorGenerator : MonoBehaviour
 
     public Color GenerateNewColor()
     {
-        int choose = Random.Range(0, 3);
-        switch (choose)
+        //int choose = Random.Range(0, 3);
+        int redWeight = Random.Range(0, 11);
+        int greenWeight = Random.Range(0, 11);
+        int blueWeight = Random.Range(0, 11);
+        int sumWeight = redWeight + greenWeight + blueWeight;
+        if (sumWeight <= 0)
         {
-            // Red color to be changed
-            case 0:
-                {
-                    if (directionRedFlag)
+            int choose = Random.Range(0, 3);
+            switch (choose)
+            {
+                case 0:
                     {
-                        r = Mathf.Clamp(r + colorChangeStep, minRValue, maxRValue);
-                        if (r == maxRValue)
-                        {
-                            directionRedFlag = !directionRedFlag;
-                        }
+                        redWeight = 1;
+                        sumWeight = 1;
+                        break;
                     }
-                    else
+                case 1:
                     {
-                        r = Mathf.Clamp(r - colorChangeStep, minRValue, maxRValue);
-                        if (r == minRValue)
-                        {
-                            directionRedFlag = !directionRedFlag;
-                        }
+                        greenWeight = 1;
+                        sumWeight = 1;
+                        break;
                     }
-                    // Debug.Log("Red: " + r);
-                    break;
-                }
-            // Green color to be changed
-            case 1:
-                {
-                    if (directionGreenFlag)
+                case 2:
                     {
-                        g = Mathf.Clamp(g + colorChangeStep, minGValue, maxGValue);
-                        if (r == maxGValue)
-                        {
-                            directionGreenFlag = !directionGreenFlag;
-                        }
+                        blueWeight = 1;
+                        sumWeight = 1;
+                        break;
                     }
-                    else
-                    {
-                        g = Mathf.Clamp(g - colorChangeStep, minGValue, maxGValue);
-                        if (r == minGValue)
-                        {
-                            directionGreenFlag = !directionGreenFlag;
-                        }
-                    }
-                    // Debug.Log("Green: " + g);
-                    break;
-                }
-            // Blue color to be changed
-            case 2:
-                {
-                    if (directionBlueFlag)
-                    {
-                        b = Mathf.Clamp(b + colorChangeStep, minBValue, maxBValue);
-                        if (b == maxBValue)
-                        {
-                            directionBlueFlag = !directionBlueFlag;
-                        }
-                    }
-                    else
-                    {
-                        b = Mathf.Clamp(b - colorChangeStep, minBValue, maxBValue);
-                        if (b == minBValue)
-                        {
-                            directionBlueFlag = !directionBlueFlag;
-                        }
-                    }
-                    // Debug.Log("Blue: " + b);
-                    break;
-                }
+            }
         }
+        float redSpeed = redWeight / (float)sumWeight * colorChangeStep;
+        float greenSpeed = greenWeight / (float)sumWeight * colorChangeStep;
+        float blueSpeed = blueWeight / (float)sumWeight * colorChangeStep;
+        // Red color to be changed
+        if (directionRedFlag)
+        {
+            r = Mathf.Clamp(r + redSpeed, minRValue, maxRValue);
+            if (r == maxRValue)
+            {
+                directionRedFlag = !directionRedFlag;
+            }
+        }
+        else
+        {
+            r = Mathf.Clamp(r - redSpeed, minRValue, maxRValue);
+            if (r == minRValue)
+            {
+                directionRedFlag = !directionRedFlag;
+            }
+        }
+        // Debug.Log("Red: " + r);
+        // Green color to be changed
+        if (directionGreenFlag)
+        {
+            g = Mathf.Clamp(g + greenSpeed, minGValue, maxGValue);
+            if (g == maxGValue)
+            {
+                directionGreenFlag = !directionGreenFlag;
+            }
+        }
+        else
+        {
+            g = Mathf.Clamp(g - greenSpeed, minGValue, maxGValue);
+            if (g == minGValue)
+            {
+                directionGreenFlag = !directionGreenFlag;
+            }
+        }
+        // Debug.Log("Green: " + g);
+        if (directionBlueFlag)
+        {
+            b = Mathf.Clamp(b + blueSpeed, minBValue, maxBValue);
+            if (b == maxBValue)
+            {
+                directionBlueFlag = !directionBlueFlag;
+            }
+        }
+        else
+        {
+            b = Mathf.Clamp(b - blueSpeed, minBValue, maxBValue);
+            if (b == minBValue)
+            {
+                directionBlueFlag = !directionBlueFlag;
+            }
+        }
+        // Debug.Log("Blue: " + b);
         return new Color(r / 255f, g / 255f, b / 255f, 1f);
+    }
+
+    public Color GetCurrentColor()
+    {
+        return new Color(r / 255f, g / 255f, b / 255f, 1f);
+    }
+
+    public Color GetReverseColor()
+    {
+        return new Color((255 - r) / 255f, (255 - g) / 255f, (255 - b) / 255f, 1f);
     }
 }
