@@ -50,6 +50,8 @@ public class CylinderManager : MonoBehaviour
     [SerializeField]
     GameObject defaultCylinder;
     [SerializeField]
+    Color defaultCylinderStartColor;
+    [SerializeField]
     GameObject particleNReachPrefab;
     [SerializeField]
     GameObject textureAccuracySatisfy;
@@ -59,7 +61,7 @@ public class CylinderManager : MonoBehaviour
     public float textureDestroyTime = 2f;
 
     public Vector3 startPosition = new Vector3(0, 0.5f, 0);
-    public Color color;
+    // public Color color;
     public GameObject cylinderPrefab;
     public GameObject internalCircle;
     public float prepareCylinderTime = 1f;
@@ -512,6 +514,14 @@ public class CylinderManager : MonoBehaviour
         // ChangeCylinderColor?.Invoke();
     }
 
+    private void SetStartMaterialToObject(GameObject currentCylinder)
+    {
+        Renderer rend = currentCylinder.GetComponent<Renderer>();
+        rend.material = new Material(originalMaterial);
+        rend.material.color = colorGenerator.GetCurrentColor();
+        // ChangeCylinderColor?.Invoke();
+    }
+
     public CylinderStates GetCylinderState()
     {
         return currentCylinderTowerState;
@@ -536,6 +546,12 @@ public class CylinderManager : MonoBehaviour
     {
         colorGenerator.ResetGenerator();
         SetNewMaterialToObject(defaultCylinder);
+    }
+
+    public void SetDefaultCylinderColor()
+    {
+        colorGenerator.InitGenerator(defaultCylinderStartColor);
+        SetStartMaterialToObject(defaultCylinder);
     }
 
     public void CleanTower()

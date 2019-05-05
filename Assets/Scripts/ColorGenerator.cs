@@ -25,6 +25,17 @@ public class ColorGenerator : MonoBehaviour
     public int maxGValue = 220;
     public int maxBValue = 220;
 
+    public void InitGenerator(Color color)
+    {
+        r = Mathf.Clamp(color.r * 255, minRValue, maxRValue);
+        g = Mathf.Clamp(color.g * 255, minGValue, maxGValue);
+        b = Mathf.Clamp(color.b * 255, minBValue, maxBValue);
+        Debug.Log("R: " + r + " G: " + g + " B: " + b);
+        directionRedFlag = true;
+        directionGreenFlag = true;
+        directionBlueFlag = true;
+    }
+
     public void ResetGenerator()
     {
         r = Random.Range(minRValue, maxRValue + 1);

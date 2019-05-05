@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
     public Material backGroundMaterial;
     public Text cylinderScore;
     public Text currentTry;
+    public Text bestScore;
     public CinemachineVirtualCamera cinemachineVirtualCamera;
     public Vector3 cinemachineStartOffset;
     public GameObject restartButton;
@@ -51,9 +52,11 @@ public class GameManager : MonoBehaviour
         restartClipPlayer = GameObject.FindGameObjectWithTag("RestartClipPlayer").GetComponent<ClipPlayer>();
         backGroundColorChanger = GameObject.FindGameObjectWithTag("BackGround").GetComponent<BackGroundColorChanger>();
         backGroundColorChanger.SetBackGroundMaterial(backGroundMaterial);
-        backGroundColorChanger.SetBackGroundRandomStartColor();
+        // backGroundColorChanger.SetBackGroundRandomStartColor();
+        backGroundColorChanger.SetBackGroundFixedStartColor();
         fileDataController = GetComponent<FileDataController>();
         maxScore = fileDataController.ReadMaxScore();
+        bestScore.text = "Best score: " + maxScore;
         CinemachineTransposer cinemachineTransposer = cinemachineVirtualCamera.GetCinemachineComponent<CinemachineTransposer>();
         cinemachineTransposer.m_FollowOffset = cinemachineStartOffset;
     }
@@ -65,13 +68,36 @@ public class GameManager : MonoBehaviour
         {
             case GameStates.APP_STARTED:
                 {
-                    ResetTower();
+                    StartTower();
                     gameState = GameStates.NOT_PLAYING;
                     break;
                 }
             case GameStates.REQUIRE_START:
                 {
-                    gameState = GameStates.REQUIRE_PLAYING_RESTART_CLIP;
+                    gameState = GameStates.REQUIRE_PLAYING_START_CLIP;
+                    break;
+                }
+            case GameStates.REQUIRE_PLAYING_START_CLIP:
+                {
+                    restartClipPlayer.ClipPlayed += OnStartClipPlayed;
+                    restartClipPlayer.SetCylinderManager(cylinderManager);
+                    restartClipPlayer.SetCinemachineTransposer(cinemachineVirtualCamera.GetCinemachineComponent<CinemachineTransposer>());
+                    restartClipPlayer.SetCinemachineStartOffset(cinemachineStartOffset);
+                    PlayRestartClip();
+                    cylinderScore.enabled = false;
+                    gameState = GameStates.PLAYING_START_CLIP;
+                    break;
+                }
+            case GameStates.PLAYING_START_CLIP:
+                {
+                    break;
+                }
+            case GameStates.REQUIRE_START_CYLINDER_MANAGER:
+                {
+                    cylinderScore.enabled = true;
+                    cylinderManager.Init();
+                    gameState = GameStates.PLAYING;
+                    Debug.Log("Game started");
                     break;
                 }
             case GameStates.PLAYING:
@@ -127,6 +153,7 @@ public class GameManager : MonoBehaviour
             case GameStates.REQUIRE_RESTART:
                 {
                     ResetTower();
+                    bestScore.enabled = false;
                     gameState = GameStates.REQUIRE_PLAYING_RESTART_CLIP;
                     break;
                 }
@@ -155,9 +182,24 @@ public class GameManager : MonoBehaviour
         backGroundParticles.Play();
     }
 
+    private void OnStartClipPlayed()
+    {
+        restartClipPlayer.ClipPlayed -= OnStartClipPlayed;
+        gameState = GameStates.REQUIRE_START_CYLINDER_MANAGER;
+        backGroundColorChanger.StartChanger();
+        backGroundParticles.Play();
+    }
+
     private void ResetTower()
     {
         cylinderManager.ResetDefaultCylinderColor();
+        cylinderManager.CleanTower();
+        cylinderManager.ResetCameraTargetPosition();
+    }
+
+    private void StartTower()
+    {
+        cylinderManager.SetDefaultCylinderColor();
         cylinderManager.CleanTower();
         cylinderManager.ResetCameraTargetPosition();
     }
@@ -180,7 +222,9 @@ public class GameManager : MonoBehaviour
         {
             fileDataController.SaveMaxScore(currentScore);
             maxScore = currentScore;
+            bestScore.text = "Best score: " + maxScore;
         }
+        bestScore.enabled = true;
     }
 
     private void OnChangeCylinderColor()

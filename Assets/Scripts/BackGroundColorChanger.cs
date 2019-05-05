@@ -11,6 +11,7 @@ public class BackGroundColorChanger : MonoBehaviour
     public int maxRValue = 255;
     public int maxGValue = 255;
     public int maxBValue = 255;
+    public Color startBackGroundColor;
     Material backGroundMaterial;
     bool directionRedFlag;
     bool directionGreenFlag;
@@ -107,6 +108,11 @@ public class BackGroundColorChanger : MonoBehaviour
             Random.Range(0, 256) / 255f,
             Random.Range(0, 256) / 255f,
             1);
+    }
+
+    public void SetBackGroundFixedStartColor()
+    {
+        backGroundMaterial.color = startBackGroundColor;
     }
 
     public void StopChanger()
