@@ -294,6 +294,8 @@ public class CylinderManager : MonoBehaviour
             currentPosition - new Vector3(0, moveUpStep / 2, 0),
             particleNReachPrefab.transform.rotation);
         ParticleSystem particleSystem = particlesClone.GetComponent<ParticleSystem>();
+        ParticleSystem.MainModule main = particleSystem.main;
+        main.startColor = colorGenerator.GetCurrentColor();
         var shapeSettings = particleSystem.shape;
         shapeSettings.radius = cylinderBaseRadius * currentMaxScale;
         Destroy(particlesClone, particlesDestroyTime);
