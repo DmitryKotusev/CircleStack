@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     BackGroundColorChanger backGroundColorChanger;
     FileDataController fileDataController;
 
+    public GameObject roofContainer;
     public ParticleSystem backGroundParticles;
     public Material backGroundMaterial;
     public Text cylinderScore;
@@ -27,7 +28,6 @@ public class GameManager : MonoBehaviour
     public Vector3 cinemachineStartOffset;
     public GameObject restartButton;
     public GameObject startButton;
-    // public string restartText = "Tap\to\nRestart";
 
     public void RestartGame()
     {
@@ -38,27 +38,55 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         startButton.SetActive(false);
-        gameState = GameStates.REQUIRE_START;
+        gameState = GameStates.REQUIRE_START_PLAY;
     }
 
     private void Start()
     {
-        // gameState = GameStates.PLAYING;
-        cylinderManager = GameObject.FindGameObjectWithTag("CylinderManager").GetComponent<CylinderManager>();
-        cylinderManager.GameOver += OnCylinderManagerGameOver;
-        // cylinderManager.ChangeCylinderColor += OnChangeCylinderColor;
+        InitCylinderManagerStartSettings();
+
         inputController = GameObject.FindGameObjectWithTag("InputController").GetComponent<InputController>();
         endClipPlayer = GameObject.FindGameObjectWithTag("EndClipPlayer").GetComponent<ClipPlayer>();
         restartClipPlayer = GameObject.FindGameObjectWithTag("RestartClipPlayer").GetComponent<ClipPlayer>();
-        backGroundColorChanger = GameObject.FindGameObjectWithTag("BackGround").GetComponent<BackGroundColorChanger>();
-        backGroundColorChanger.SetBackGroundMaterial(backGroundMaterial);
-        // backGroundColorChanger.SetBackGroundRandomStartColor();
-        backGroundColorChanger.SetBackGroundFixedStartColor();
+
+        InitBackGroundColorChangerStartSettings();
+
         fileDataController = GetComponent<FileDataController>();
-        maxScore = fileDataController.ReadMaxScore();
-        bestScore.text = "Best score: " + maxScore;
+
+        InitMaxScoreStartSettings();
+        InitCinemachineStartSettings();
+
+        InitRoofStartSettings();
+    }
+
+    private void InitRoofStartSettings()
+    {
+        roofContainer.GetComponent<RootContainer>().ClipPlayed += OnFallRoofClipPlayed;
+    }
+
+    private void InitCinemachineStartSettings()
+    {
         CinemachineTransposer cinemachineTransposer = cinemachineVirtualCamera.GetCinemachineComponent<CinemachineTransposer>();
         cinemachineTransposer.m_FollowOffset = cinemachineStartOffset;
+    }
+
+    private void InitMaxScoreStartSettings()
+    {
+        maxScore = fileDataController.ReadMaxScore();
+        bestScore.text = "Best score: " + maxScore;
+    }
+
+    private void InitBackGroundColorChangerStartSettings()
+    {
+        backGroundColorChanger = GameObject.FindGameObjectWithTag("BackGround").GetComponent<BackGroundColorChanger>();
+        backGroundColorChanger.SetBackGroundMaterial(backGroundMaterial);
+        backGroundColorChanger.SetBackGroundFixedStartColor();
+    }
+
+    private void InitCylinderManagerStartSettings()
+    {
+        cylinderManager = GameObject.FindGameObjectWithTag("CylinderManager").GetComponent<CylinderManager>();
+        cylinderManager.GameOver += OnCylinderManagerGameOver;
     }
 
     private void Update()
@@ -72,9 +100,10 @@ public class GameManager : MonoBehaviour
                     gameState = GameStates.NOT_PLAYING;
                     break;
                 }
-            case GameStates.REQUIRE_START:
+            case GameStates.REQUIRE_START_PLAY:
                 {
                     gameState = GameStates.REQUIRE_PLAYING_START_CLIP;
+                    roofContainer.SetActive(false);
                     break;
                 }
             case GameStates.REQUIRE_PLAYING_START_CLIP:
@@ -214,6 +243,13 @@ public class GameManager : MonoBehaviour
 
     private void OnCylinderManagerGameOver()
     {
+        gameState = GameStates.PLAYING_ROOF_FALLING_CLIP;
+        roofContainer.SetActive(true);
+    }
+
+    private void OnFallRoofClipPlayed()
+    {
+        Debug.Log("Fall play finished");
         gameState = GameStates.REQUIRE_PLAYING_END_CLIP;
         backGroundColorChanger.StopChanger();
         backGroundParticles.Stop();
@@ -229,7 +265,6 @@ public class GameManager : MonoBehaviour
 
     private void OnChangeCylinderColor()
     {
-        // Change color logic
         backGroundMaterial.color = cylinderManager.GetColorGenerator().GetReverseColor();
     }
 

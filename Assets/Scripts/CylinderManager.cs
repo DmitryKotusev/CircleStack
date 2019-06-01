@@ -102,6 +102,8 @@ public class CylinderManager : MonoBehaviour
     private AudioSource audioPlayer;
     [SerializeField]
     CylinderStates currentCylinderTowerState;
+    [SerializeField]
+    GameObject roofContainer;
 
     public ColorGenerator GetColorGenerator()
     {
@@ -506,6 +508,7 @@ public class CylinderManager : MonoBehaviour
         // Material setting end
         cameraTarget.transform.position = currentPosition;
         internalCircle.transform.position = currentPosition;
+        roofContainer.transform.position = currentPosition + new Vector3(0, moveUpStep / 2, 0);
     }
 
     private void SetNewMaterialToObject(GameObject currentCylinder)
