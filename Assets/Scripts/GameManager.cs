@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     ClipPlayer restartClipPlayer;
     BackGroundColorChanger backGroundColorChanger;
     FileDataController fileDataController;
+    InGameCashCounter inGameCashCounter;
 
     public GameObject roofContainer;
     public ParticleSystem backGroundParticles;
@@ -52,6 +53,7 @@ public class GameManager : MonoBehaviour
         InitBackGroundColorChangerStartSettings();
 
         fileDataController = GetComponent<FileDataController>();
+        inGameCashCounter = GetComponent<InGameCashCounter>();
 
         InitMaxScoreStartSettings();
         InitCinemachineStartSettings();
