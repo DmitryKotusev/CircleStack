@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
     public Text cylinderScore;
     public Text currentTry;
     public Text bestScore;
+    public Text earnedCash;
     public CinemachineVirtualCamera cinemachineVirtualCamera;
     public Vector3 cinemachineStartOffset;
     public GameObject restartButton;
@@ -72,7 +73,7 @@ public class GameManager : MonoBehaviour
 
     private void InitRoofStartSettings()
     {
-        roofContainer.GetComponent<RootContainer>().ClipPlayed += OnFallRoofClipPlayed;
+        roofContainer.GetComponent<RoofContainer>().ClipPlayed += OnFallRoofClipPlayed;
     }
 
     private void InitCinemachineStartSettings()
@@ -195,6 +196,7 @@ public class GameManager : MonoBehaviour
                 {
                     ResetTower();
                     bestScore.enabled = false;
+                    earnedCash.enabled = false;
                     roofContainer.SetActive(false);
                     gameState = GameStates.REQUIRE_PLAYING_RESTART_CLIP;
                     break;
@@ -267,11 +269,17 @@ public class GameManager : MonoBehaviour
         int currentScore = cylinderManager.GetCylinderAmount();
         if (currentScore > maxScore)
         {
+            // Saving max score
             fileDataController.SaveMaxScore(currentScore);
             maxScore = currentScore;
             bestScore.text = "Best score: " + maxScore;
         }
         bestScore.enabled = true;
+
+        // Saving cash
+        earnedCash.text = "Earned cash: " + inGameCashCounter.GetCurrentCash();
+        // Save to local storage and global cash UI update required
+        earnedCash.enabled = true;
     }
 
     private void OnChangeCylinderColor()

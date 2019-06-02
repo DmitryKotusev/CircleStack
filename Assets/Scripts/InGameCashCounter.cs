@@ -1,6 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class InGameCashCounter : MonoBehaviour
 {
@@ -14,6 +13,12 @@ public class InGameCashCounter : MonoBehaviour
     public int standardRewardRequiredAmountStep;
     public float firstReward;
     public float standardReward;
+    [Header("GUI display variables")]
+    public RectTransform canvas;
+    public GameObject textCashPrefab;
+    public float textCashLifeTime;
+    public Vector2 startSpawnPosition;
+    public Vector2 finishSpawnPosition;
 
     private uint progressionIndex;
     private uint stepsWithoutMistake = 0; // !!!!
@@ -21,6 +26,11 @@ public class InGameCashCounter : MonoBehaviour
     [SerializeField]
     private float currentCash;
     private CylinderManager cylinderManager;
+
+    public float GetCurrentCash()
+    {
+        return currentCash;
+    }
 
     public void InitCounter()
     {
@@ -36,7 +46,12 @@ public class InGameCashCounter : MonoBehaviour
         float currentAddReward = 0;
         currentAddReward += ProgressionLogic();
         currentAddReward += AchievementLogic();
-        
+
+        if (currentAddReward > 0)
+        {
+            DisplayAddedCash(currentAddReward);
+        }
+
         currentCash += currentAddReward;
     }
 
@@ -83,6 +98,11 @@ public class InGameCashCounter : MonoBehaviour
         float currentAddReward = 0;
         currentAddReward += AchievementLogic();
         
+        if (currentAddReward > 0)
+        {
+            DisplayAddedCash(currentAddReward);
+        }
+
         currentCash += currentAddReward;
     }
 
@@ -94,5 +114,18 @@ public class InGameCashCounter : MonoBehaviour
     private float CountProgressionMember()
     {
         return Mathf.Pow(progressionDenominator, progressionIndex);
+    }
+
+    private void DisplayAddedCash(float currentAddReward)
+    {
+        GameObject textCashPrefabClone = Instantiate(textCashPrefab, canvas);
+        textCashPrefabClone.GetComponent<RectTransform>().localPosition
+            = new Vector3(
+                Random.Range(startSpawnPosition.x, finishSpawnPosition.x),
+                Random.Range(startSpawnPosition.y, finishSpawnPosition.y),
+                textCashPrefab.GetComponent<RectTransform>().localPosition.z
+                );
+        textCashPrefabClone.GetComponent<Text>().text = "+" + currentAddReward.ToString();
+        Destroy(textCashPrefabClone, textCashLifeTime);
     }
 }

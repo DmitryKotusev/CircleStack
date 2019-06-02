@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class BackGroundColorChanger : MonoBehaviour
 {
-    public float changeColorSpeed;
+    // public float changeColorSpeed;
+    public float redChangeColorSpeed;
+    public float greenChangeColorSpeed;
+    public float blueChangeColorSpeed;
     public int minRValue = 0;
     public int minGValue = 0;
     public int minBValue = 0;
@@ -22,17 +25,20 @@ public class BackGroundColorChanger : MonoBehaviour
         float r = backGroundMaterial.color.r * 255;
         float g = backGroundMaterial.color.g * 255;
         float b = backGroundMaterial.color.b * 255;
-        int redWeight = Random.Range(0, 11);
-        int greenWeight = Random.Range(0, 11);
-        int blueWeight = Random.Range(0, 11);
-        int sumWeight = redWeight + greenWeight + blueWeight;
-        if (sumWeight <= 0)
-        {
-            return;
-        }
-        float redSpeed = redWeight / (float)sumWeight * changeColorSpeed;
-        float greenSpeed = greenWeight / (float)sumWeight * changeColorSpeed;
-        float blueSpeed = blueWeight / (float)sumWeight * changeColorSpeed;
+        //int redWeight = Random.Range(0, 11);
+        //int greenWeight = Random.Range(0, 11);
+        //int blueWeight = Random.Range(0, 11);
+        //int sumWeight = redWeight + greenWeight + blueWeight;
+        //if (sumWeight <= 0)
+        //{
+        //    return;
+        //}
+        //float redSpeed = redWeight / (float)sumWeight * changeColorSpeed;
+        //float greenSpeed = greenWeight / (float)sumWeight * changeColorSpeed;
+        //float blueSpeed = blueWeight / (float)sumWeight * changeColorSpeed;
+        float redSpeed = Random.Range(0, redChangeColorSpeed);
+        float greenSpeed = Random.Range(0, greenChangeColorSpeed);
+        float blueSpeed = Random.Range(0, blueChangeColorSpeed);
         // Red channel
         if (directionRedFlag)
         {

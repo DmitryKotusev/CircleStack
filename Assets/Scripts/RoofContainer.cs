@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RootContainer : MonoBehaviour
+public class RoofContainer : MonoBehaviour
 {
     [SerializeField]
     Transform roofHolder;
