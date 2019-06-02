@@ -82,10 +82,11 @@ public class CylinderManager : MonoBehaviour
     public float boostAmount = 0.4f;
 
     public event Action GameOver;
+    public event Action CylinderFixedAccurately;
+    public event Action CylinderFixedNotAccurately;
     // public event Action ChangeCylinderColor;
 
     private uint increaseScaleSpeedCounter = 0;
-    private uint stepsWithoutMistake = 0;
     private uint boostCounter = 0;
     private Vector3 startCameraTargetPosition;
     private Vector3 currentPosition;
@@ -153,7 +154,7 @@ public class CylinderManager : MonoBehaviour
         if (Mathf.Abs(currentCylinder.transform.localScale.x - currentMaxScale) < tapAccuracy)
         {
             boostCounter++;
-            stepsWithoutMistake++;
+            CylinderFixedAccurately?.Invoke();
             if (boostCounter >= boostThreshold)
             {
                 boostCounter = 0;
@@ -180,7 +181,7 @@ public class CylinderManager : MonoBehaviour
         }
         else
         {
-            stepsWithoutMistake = 0;
+            CylinderFixedNotAccurately?.Invoke();
             boostCounter = 0;
             // Звук промаха
             PlayMissClip();
@@ -403,7 +404,6 @@ public class CylinderManager : MonoBehaviour
         colorGenerator = GetComponent<ColorGenerator>();
         audioPlayer = GetComponent<AudioSource>();
         boostCounter = 0;
-        stepsWithoutMistake = 0;
         increaseScaleSpeedCounter = 0;
         isPlayerHavingSpeedReward = false;
         // colorGenerator.ResetGenerator();
@@ -585,10 +585,5 @@ public class CylinderManager : MonoBehaviour
     public uint GetCurrentTry()
     {
         return currentTry;
-    }
-
-    public uint GetStepsWithoutMistake()
-    {
-        return stepsWithoutMistake;
     }
 }

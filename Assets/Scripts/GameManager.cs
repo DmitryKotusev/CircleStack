@@ -53,12 +53,21 @@ public class GameManager : MonoBehaviour
         InitBackGroundColorChangerStartSettings();
 
         fileDataController = GetComponent<FileDataController>();
+
         inGameCashCounter = GetComponent<InGameCashCounter>();
+        InitInGameCashCounterStartSettings();
 
         InitMaxScoreStartSettings();
         InitCinemachineStartSettings();
 
         InitRoofStartSettings();
+    }
+
+    private void InitInGameCashCounterStartSettings()
+    {
+        cylinderManager.CylinderFixedAccurately += inGameCashCounter.OnCylinderFixedAccurately;
+        cylinderManager.CylinderFixedNotAccurately += inGameCashCounter.OnCylinderFixedNotAccurately;
+        inGameCashCounter.SetCylinderManager(cylinderManager);
     }
 
     private void InitRoofStartSettings()
@@ -99,6 +108,7 @@ public class GameManager : MonoBehaviour
             case GameStates.APP_STARTED:
                 {
                     StartTower();
+                    roofContainer.SetActive(false);
                     gameState = GameStates.NOT_PLAYING;
                     break;
                 }
@@ -127,8 +137,8 @@ public class GameManager : MonoBehaviour
                 {
                     cylinderScore.enabled = true;
                     cylinderManager.Init();
+                    inGameCashCounter.InitCounter();
                     gameState = GameStates.PLAYING;
-                    Debug.Log("Game started");
                     break;
                 }
             case GameStates.PLAYING:
@@ -177,14 +187,15 @@ public class GameManager : MonoBehaviour
                 {
                     cylinderScore.enabled = true;
                     cylinderManager.Init();
+                    inGameCashCounter.InitCounter();
                     gameState = GameStates.PLAYING;
-                    Debug.Log("Game restarted");
                     break;
                 }
             case GameStates.REQUIRE_RESTART:
                 {
                     ResetTower();
                     bestScore.enabled = false;
+                    roofContainer.SetActive(false);
                     gameState = GameStates.REQUIRE_PLAYING_RESTART_CLIP;
                     break;
                 }
@@ -202,7 +213,6 @@ public class GameManager : MonoBehaviour
         endClipPlayer.ClipPlayed -= OnEndClipPlayed;
         restartButton.SetActive(true);
         gameState = GameStates.NOT_PLAYING;
-        Debug.Log("Game over");
     }
 
     private void OnRestartClipPlayed()
@@ -251,7 +261,6 @@ public class GameManager : MonoBehaviour
 
     private void OnFallRoofClipPlayed()
     {
-        Debug.Log("Fall play finished");
         gameState = GameStates.REQUIRE_PLAYING_END_CLIP;
         backGroundColorChanger.StopChanger();
         backGroundParticles.Stop();

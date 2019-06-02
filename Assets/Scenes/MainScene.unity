@@ -1305,11 +1305,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a94269f8031d54149951a6bcee7caca9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  requiredAmountOfStepsWithoutMistake: 0
-  progressionDenominator: 0
-  firstRewardRequiredAmount: 0
-  standardRewardStartRequiredAmount: 0
-  standardRewardRequiredAmountStep: 0
+  requiredAmountOfStepsWithoutMistake: 5
+  progressionDenominator: 2
+  firstRewardRequiredAmount: 5
+  standardRewardStartRequiredAmount: 30
+  standardRewardRequiredAmountStep: 20
+  firstReward: 5
+  standardReward: 20
 --- !u!1 &862453705
 GameObject:
   m_ObjectHideFlags: 0

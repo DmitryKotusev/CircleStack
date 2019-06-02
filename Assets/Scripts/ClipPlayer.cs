@@ -64,7 +64,7 @@ public class ClipPlayer : MonoBehaviour
             requiredDistance = maxCameraDistance;
         }
 
-        Debug.Log(requiredDistance);
+        // Debug.Log(requiredDistance);
 
         // Count camera target speed
         if (cinemachineTransposer.m_FollowOffset.magnitude <= requiredDistance)

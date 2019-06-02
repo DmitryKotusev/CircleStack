@@ -30,7 +30,6 @@ public class ColorGenerator : MonoBehaviour
         r = Mathf.Clamp(color.r * 255, minRValue, maxRValue);
         g = Mathf.Clamp(color.g * 255, minGValue, maxGValue);
         b = Mathf.Clamp(color.b * 255, minBValue, maxBValue);
-        Debug.Log("R: " + r + " G: " + g + " B: " + b);
         directionRedFlag = true;
         directionGreenFlag = true;
         directionBlueFlag = true;
@@ -41,7 +40,6 @@ public class ColorGenerator : MonoBehaviour
         r = Random.Range(minRValue, maxRValue + 1);
         g = Random.Range(minGValue, maxGValue + 1);
         b = Random.Range(minBValue, maxBValue + 1);
-        Debug.Log("R: " + r + " G: " + g + " B: " + b);
         directionRedFlag = true;
         directionGreenFlag = true;
         directionBlueFlag = true;
