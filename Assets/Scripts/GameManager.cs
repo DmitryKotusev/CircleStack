@@ -30,6 +30,8 @@ public class GameManager : MonoBehaviour
     public Vector3 cinemachineStartOffset;
     public GameObject restartButton;
     public GameObject startButton;
+    public GameObject cylinderScoreGameObject;
+    public GameObject appNameGameObject;
 
     public void RestartGame()
     {
@@ -220,9 +222,10 @@ public class GameManager : MonoBehaviour
     private void OnRestartClipPlayed()
     {
         restartClipPlayer.ClipPlayed -= OnRestartClipPlayed;
-        gameState = GameStates.REQUIRE_RESTART_CYLINDER_MANAGER;
-        backGroundColorChanger.StartChanger();
-        backGroundParticles.Play();
+        gameState = GameStates.NOT_PLAYING;
+        startButton.SetActive(true);
+        cylinderScoreGameObject.SetActive(false);
+        appNameGameObject.SetActive(true);
     }
 
     private void OnStartClipPlayed()
