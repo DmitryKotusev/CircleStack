@@ -26,12 +26,16 @@ public class GameManager : MonoBehaviour
     public Text currentTry;
     public Text bestScore;
     public Text earnedCash;
+    public Text globalCash;
     public CinemachineVirtualCamera cinemachineVirtualCamera;
     public Vector3 cinemachineStartOffset;
     public GameObject restartButton;
     public GameObject startButton;
     public GameObject cylinderScoreGameObject;
     public GameObject appNameGameObject;
+    public GameObject tutorialButtonContainer;
+    public GameObject bottomButtonsContainer;
+    public GameObject cashButtonContainer;
 
     public void RestartGame()
     {
@@ -64,6 +68,13 @@ public class GameManager : MonoBehaviour
         InitCinemachineStartSettings();
 
         InitRoofStartSettings();
+
+        SynchronizeUICashWithStorageData();
+    }
+
+    private void SynchronizeUICashWithStorageData()
+    {
+        globalCash.text = fileDataController.ReadCurrencyAmount().ToString();
     }
 
     private void InitInGameCashCounterStartSettings()
@@ -226,12 +237,15 @@ public class GameManager : MonoBehaviour
         startButton.SetActive(true);
         cylinderScoreGameObject.SetActive(false);
         appNameGameObject.SetActive(true);
+        tutorialButtonContainer.SetActive(true);
+        bottomButtonsContainer.SetActive(true);
     }
 
     private void OnStartClipPlayed()
     {
         restartClipPlayer.ClipPlayed -= OnStartClipPlayed;
         gameState = GameStates.REQUIRE_START_CYLINDER_MANAGER;
+        cylinderScoreGameObject.SetActive(true);
         backGroundColorChanger.StartChanger();
         backGroundParticles.Play();
     }
@@ -282,6 +296,9 @@ public class GameManager : MonoBehaviour
         // Saving cash
         earnedCash.text = "Earned cash: " + inGameCashCounter.GetCurrentCash();
         // Save to local storage and global cash UI update required
+        AddEarnedCashToGlobal(inGameCashCounter.GetCurrentCash());
+        // Here it is
+        cashButtonContainer.SetActive(true);
         earnedCash.enabled = true;
     }
 
@@ -298,5 +315,11 @@ public class GameManager : MonoBehaviour
     private void PlayRestartClip()
     {
         restartClipPlayer.enabled = true;
+    }
+
+    private void AddEarnedCashToGlobal(float earnedCash)
+    {
+        fileDataController.AddCurrencyAmount(earnedCash);
+        SynchronizeUICashWithStorageData();
     }
 }
