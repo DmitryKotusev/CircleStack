@@ -72,7 +72,7 @@ public class GameManager : MonoBehaviour
         SynchronizeUICashWithStorageData();
     }
 
-    private void SynchronizeUICashWithStorageData()
+    public void SynchronizeUICashWithStorageData()
     {
         globalCash.text = fileDataController.ReadCurrencyAmount().ToString();
     }
@@ -211,6 +211,7 @@ public class GameManager : MonoBehaviour
                     bestScore.enabled = false;
                     earnedCash.enabled = false;
                     roofContainer.SetActive(false);
+                    cashButtonContainer.SetActive(false);
                     gameState = GameStates.REQUIRE_PLAYING_RESTART_CLIP;
                     break;
                 }
@@ -239,6 +240,7 @@ public class GameManager : MonoBehaviour
         appNameGameObject.SetActive(true);
         tutorialButtonContainer.SetActive(true);
         bottomButtonsContainer.SetActive(true);
+        cashButtonContainer.SetActive(true);
     }
 
     private void OnStartClipPlayed()
