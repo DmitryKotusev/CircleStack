@@ -13,38 +13,54 @@ public class UIManager : MonoBehaviour
     public GameObject mainPanel;
     public GameObject tutorialPanel;
     public GameObject cashShopPanel;
+    public GameObject shopPanel;
     [Header("Cash shop variables")]
     public Text cashShopCashText;
+    [Header("Shop variables")]
+    public Text shopCashText;
 
     FileDataController fileDataController;
+    [SerializeField]
+    List<GameObject> previousPanelsList;
+    GameObject currentPanel;
 
     private void Start()
     {
         fileDataController = GetComponent<FileDataController>();
+        previousPanelsList = new List<GameObject>();
+        currentPanel = mainPanel;
     }
 
     public void GoToTutorialPanel()
     {
         tutorialPanel.SetActive(true);
-        mainPanel.SetActive(false);
-    }
-
-    public void GoBackToMainPanelFromTutorialPanel()
-    {
-        tutorialPanel.SetActive(false);
-        mainPanel.SetActive(true);
+        currentPanel.SetActive(false);
+        previousPanelsList.Add(currentPanel);
+        currentPanel = tutorialPanel;
     }
 
     public void GoToCashShopPanel()
     {
         cashShopPanel.SetActive(true);
-        mainPanel.SetActive(false);
+        currentPanel.SetActive(false);
+        previousPanelsList.Add(currentPanel);
+        currentPanel = cashShopPanel;
     }
 
-    public void GoBackToMainPanelFromCashShopPanel()
+    public void GoToShopPanel()
     {
-        cashShopPanel.SetActive(false);
-        mainPanel.SetActive(true);
+        shopPanel.SetActive(true);
+        currentPanel.SetActive(false);
+        previousPanelsList.Add(currentPanel);
+        currentPanel = shopPanel;
+    }
+
+    public void GoBack()
+    {
+        currentPanel.SetActive(false);
+        currentPanel = previousPanelsList[previousPanelsList.Count - 1];
+        currentPanel.SetActive(true);
+        previousPanelsList.RemoveAt(previousPanelsList.Count - 1);
     }
 
     public void UpdateSoundState()
@@ -63,8 +79,13 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void SynchronizeShopPanelUICashWithStorageData()
+    public void SynchronizeCashShopPanelUICashWithStorageData()
     {
         cashShopCashText.text = fileDataController.ReadCurrencyAmount().ToString();
+    }
+
+    public void SynchronizeShopPanelUICashWithStorageData()
+    {
+        shopCashText.text = fileDataController.ReadCurrencyAmount().ToString();
     }
 }

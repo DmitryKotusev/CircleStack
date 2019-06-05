@@ -9,6 +9,7 @@ TagManager:
   - EndClipPlayer
   - RestartClipPlayer
   - BackGround
+  - RoofPrefabsContainer
   layers:
   - Default
   - TransparentFX
