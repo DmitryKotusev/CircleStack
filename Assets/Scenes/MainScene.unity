@@ -1048,7 +1048,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &324290086
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3081,6 +3081,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxScoreKey: MaxScore
   coinsKey: CurrencyAmount
+  roofsDataKey: RoofsData
 --- !u!114 &860447524
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3451,6 +3452,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxScoreKey: MaxScore
   coinsKey: CurrencyAmount
+  roofsDataKey: RoofsData
 --- !u!1 &933683368
 GameObject:
   m_ObjectHideFlags: 0
@@ -4757,6 +4759,7 @@ MonoBehaviour:
   arrayIndex: 1
   roofsName: Roof2
   isEquiped: 0
+  isBought: 0
 --- !u!1 &1419711794
 GameObject:
   m_ObjectHideFlags: 0
@@ -9504,6 +9507,7 @@ MonoBehaviour:
   arrayIndex: 2
   roofsName: Roof3
   isEquiped: 0
+  isBought: 0
 --- !u!1 &1431410165
 GameObject:
   m_ObjectHideFlags: 0
@@ -10167,7 +10171,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1597523130
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10903,6 +10907,7 @@ MonoBehaviour:
   arrayIndex: 3
   roofsName: Roof4
   isEquiped: 0
+  isBought: 0
 --- !u!1 &1800057207
 GameObject:
   m_ObjectHideFlags: 0
@@ -11529,6 +11534,7 @@ MonoBehaviour:
   arrayIndex: 0
   roofsName: Roof1
   isEquiped: 1
+  isBought: 0
 --- !u!1 &2103471984
 GameObject:
   m_ObjectHideFlags: 0
