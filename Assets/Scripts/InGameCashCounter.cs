@@ -75,7 +75,6 @@ public class InGameCashCounter : MonoBehaviour
                 currentAchievementReward += standardReward;
             }
         }
-        Debug.Log("Achievement reward: " + currentAchievementReward);
 
         return currentAchievementReward;
     }
@@ -85,7 +84,6 @@ public class InGameCashCounter : MonoBehaviour
         if (stepsWithoutMistake / requiredAmountOfStepsWithoutMistake > progressionIndex)
         {
             progressionIndex = stepsWithoutMistake / requiredAmountOfStepsWithoutMistake;
-            Debug.Log("Progression reward: " + CountProgressionMember());
             return CountProgressionMember();
         }
         return 0;

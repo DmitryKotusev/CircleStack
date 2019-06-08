@@ -13,10 +13,10 @@ public class FileDataController : MonoBehaviour
 
     public void InitRootPrefabsContainer()
     {
-        if (File.Exists(Path.Combine(Application.persistentDataPath, maxScoreKey)))
+        if (File.Exists(Path.Combine(Application.persistentDataPath, roofsDataKey)))
         {
             RoofsPrefabsContainer roofsPrefabsContainer =
-            GameObject.FindGameObjectWithTag("RoofsPrefabsContainer").GetComponent<RoofsPrefabsContainer>();
+            GameObject.FindGameObjectWithTag("RoofPrefabsContainer").GetComponent<RoofsPrefabsContainer>();
 
             BinaryFormatter bf = new BinaryFormatter();
             FileStream file = File.Open(Path.Combine(Application.persistentDataPath, roofsDataKey), FileMode.Open);
@@ -112,8 +112,9 @@ public class FileDataController : MonoBehaviour
     public void AddCurrencyAmount(float amount)
     {
         BinaryFormatter bf = new BinaryFormatter();
+        float newAmount = ReadCurrencyAmount() + amount;
         FileStream file = File.Create(Path.Combine(Application.persistentDataPath, coinsKey));
-        bf.Serialize(file, ReadCurrencyAmount() + amount);
+        bf.Serialize(file, newAmount);
         file.Close();
     }
 
@@ -135,7 +136,7 @@ public class FileDataController : MonoBehaviour
 
         BinaryFormatter bf = new BinaryFormatter();
         FileStream file = File.Create(Path.Combine(Application.persistentDataPath, coinsKey));
-        bf.Serialize(file, ReadCurrencyAmount() - amount);
+        bf.Serialize(file, currentCurrencyAmount - amount);
         file.Close();
         return true;
     }

@@ -18,6 +18,7 @@ public class UIManager : MonoBehaviour
     public Text cashShopCashText;
     [Header("Shop variables")]
     public Text shopCashText;
+    public ShopManager shopManager;
 
     FileDataController fileDataController;
     [SerializeField]
@@ -52,6 +53,9 @@ public class UIManager : MonoBehaviour
         shopPanel.SetActive(true);
         currentPanel.SetActive(false);
         previousPanelsList.Add(currentPanel);
+        fileDataController.InitRootPrefabsContainer();
+        SynchronizeShopPanelUICashWithStorageData();
+        shopManager.InitShop();
         currentPanel = shopPanel;
     }
 
