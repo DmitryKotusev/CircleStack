@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class RoofsPrefabsContainer : MonoBehaviour
 {
-    public List<GameObject> roofPrefabInfos;
+    public List<RoofPrefabInfo> roofPrefabInfos;
 }

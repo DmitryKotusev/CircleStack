@@ -3036,6 +3036,7 @@ MonoBehaviour:
   gameState: 0
   maxScore: 0
   roofContainer: {fileID: 1357232700}
+  roofHolder: {fileID: 1357232701}
   backGroundParticles: {fileID: 1419711797}
   backGroundMaterial: {fileID: 2100000, guid: 24416f0766e74a64abd4b319c092dd37, type: 2}
   cylinderScore: {fileID: 707294762}
@@ -4698,6 +4699,12 @@ Transform:
 --- !u!1 &1357232700 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2471487552473490765, guid: 58b87d790adc25c48a48068f71d3825b,
+    type: 3}
+  m_PrefabInstance: {fileID: 1357232698}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1357232701 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2471487552992894230, guid: 58b87d790adc25c48a48068f71d3825b,
     type: 3}
   m_PrefabInstance: {fileID: 1357232698}
   m_PrefabAsset: {fileID: 0}
@@ -11354,7 +11361,7 @@ GameObject:
   - component: {fileID: 2021583943}
   m_Layer: 0
   m_Name: RoofsPrefabsContainer
-  m_TagString: Untagged
+  m_TagString: RoofPrefabsContainer
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11389,7 +11396,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e1918ee81010ef4fbcb9418682235b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roofPrefabInfos: []
+  roofPrefabInfos:
+  - {fileID: 2093590082}
+  - {fileID: 1357501855}
+  - {fileID: 1424823554}
+  - {fileID: 1794366353}
 --- !u!1 &2092482307
 GameObject:
   m_ObjectHideFlags: 0

@@ -10,4 +10,5 @@ public class RoofPrefabInfo : MonoBehaviour
     public int arrayIndex;
     public string roofsName;
     public bool isEquiped = false;
+    public bool isBought = false;
 }

@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     InGameCashCounter inGameCashCounter;
 
     public GameObject roofContainer;
+    public GameObject roofHolder;
     public ParticleSystem backGroundParticles;
     public Material backGroundMaterial;
     public Text cylinderScore;
@@ -36,6 +37,16 @@ public class GameManager : MonoBehaviour
     public GameObject tutorialButtonContainer;
     public GameObject bottomButtonsContainer;
     public GameObject cashButtonContainer;
+
+    public void EquipNewRoof(RoofPrefabInfo roofPrefabInfo)
+    {
+        Transform roofHolderTransform = roofHolder.transform;
+        if (roofHolderTransform.childCount > 0)
+        {
+            Destroy(roofHolderTransform.GetChild(0).gameObject);
+        }
+        Instantiate(roofPrefabInfo, roofHolderTransform);
+    }
 
     public void RestartGame()
     {

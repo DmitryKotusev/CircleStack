@@ -6,6 +6,26 @@ public class FileDataController : MonoBehaviour
 {
     public string maxScoreKey = "MaxScore";
     public string coinsKey = "CurrencyAmount";
+    public string roofsDataKey = "RoofsData";
+
+    public void InitRootPrefabsContainer()
+    {
+        RoofsPrefabsContainer roofsPrefabsContainer =
+            GameObject.FindGameObjectWithTag("RoofsPrefabsContainer").GetComponent<RoofsPrefabsContainer>();
+        string roofsDataJsonString = PlayerPrefs.GetString(roofsDataKey, "{\"roofsData\":[]}");
+        RoofsDataWrapper arrayWrapper = JsonUtility.FromJson<RoofsDataWrapper>(roofsDataJsonString);
+        if (arrayWrapper.roofsData.Length == 0)
+        {
+            return;
+        }
+        roofsPrefabsContainer.roofPrefabInfos = new List<RoofPrefabInfo>(arrayWrapper.roofsData);
+    }
+
+    public void SynchronizeRootPrefabsContainerWithDataStotage()
+    {
+
+    }
+
     public void SaveMaxScore(int score)
     {
         PlayerPrefs.SetInt(maxScoreKey, score);
