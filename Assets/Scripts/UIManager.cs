@@ -16,6 +16,8 @@ public class UIManager : MonoBehaviour
     public GameObject shopPanel;
     [Header("Cash shop variables")]
     public Text cashShopCashText;
+    [Header("Main panel variables")]
+    public Text mainPanelCashText;
     [Header("Shop variables")]
     public Text shopCashText;
     public ShopManager shopManager;
@@ -30,6 +32,14 @@ public class UIManager : MonoBehaviour
         fileDataController = GetComponent<FileDataController>();
         previousPanelsList = new List<GameObject>();
         currentPanel = mainPanel;
+        shopManager.FileSynchroRequired += SynchronizeDataWithFileStorage;
+        shopManager.UICurrencySynchroRequired += SynchronizeShopPanelUICashWithStorageData;
+        shopManager.SetFileDataController(fileDataController);
+    }
+
+    void SynchronizeDataWithFileStorage()
+    {
+        fileDataController.SynchronizeRoofPrefabsContainerWithDataStotage();
     }
 
     public void GoToTutorialPanel()
@@ -53,7 +63,7 @@ public class UIManager : MonoBehaviour
         shopPanel.SetActive(true);
         currentPanel.SetActive(false);
         previousPanelsList.Add(currentPanel);
-        fileDataController.InitRootPrefabsContainer();
+        fileDataController.InitRoofPrefabsContainer();
         SynchronizeShopPanelUICashWithStorageData();
         shopManager.InitShop();
         currentPanel = shopPanel;
@@ -65,6 +75,9 @@ public class UIManager : MonoBehaviour
         currentPanel = previousPanelsList[previousPanelsList.Count - 1];
         currentPanel.SetActive(true);
         previousPanelsList.RemoveAt(previousPanelsList.Count - 1);
+        SynchronizeCashShopPanelUICashWithStorageData();
+        SynchronizeShopPanelUICashWithStorageData();
+        SynchronizeMainPanelUICashWithStorageData();
     }
 
     public void UpdateSoundState()
@@ -91,5 +104,10 @@ public class UIManager : MonoBehaviour
     public void SynchronizeShopPanelUICashWithStorageData()
     {
         shopCashText.text = fileDataController.ReadCurrencyAmount().ToString();
+    }
+
+    public void SynchronizeMainPanelUICashWithStorageData()
+    {
+        mainPanelCashText.text = fileDataController.ReadCurrencyAmount().ToString();
     }
 }

@@ -37,6 +37,7 @@ public class GameManager : MonoBehaviour
     public GameObject tutorialButtonContainer;
     public GameObject bottomButtonsContainer;
     public GameObject cashButtonContainer;
+    public ShopManager shopManager;
 
     public void EquipNewRoof(RoofPrefabInfo roofPrefabInfo)
     {
@@ -45,7 +46,19 @@ public class GameManager : MonoBehaviour
         {
             Destroy(roofHolderTransform.GetChild(0).gameObject);
         }
-        Instantiate(roofPrefabInfo, roofHolderTransform);
+        Instantiate(roofPrefabInfo.roofPrefab, roofHolderTransform);
+    }
+
+    private void RoofPrefabStartInit()
+    {
+        fileDataController.InitRoofPrefabsContainer();
+        RoofsPrefabsContainer roofsPrefabsContainer =
+            GameObject.FindGameObjectWithTag("RoofPrefabsContainer").GetComponent<RoofsPrefabsContainer>();
+        RoofPrefabInfo equipedRoof = roofsPrefabsContainer.roofPrefabInfos.Find((roofInfo) =>
+        {
+            return roofInfo.isEquiped;
+        });
+        EquipNewRoof(equipedRoof);
     }
 
     public void RestartGame()
@@ -79,8 +92,16 @@ public class GameManager : MonoBehaviour
         InitCinemachineStartSettings();
 
         InitRoofStartSettings();
+        RoofPrefabStartInit();
+
+        InitShopManagerSettings();
 
         SynchronizeUICashWithStorageData();
+    }
+
+    private void InitShopManagerSettings()
+    {
+        shopManager.EquipNewRoofEvent += EquipNewRoof;
     }
 
     public void SynchronizeUICashWithStorageData()

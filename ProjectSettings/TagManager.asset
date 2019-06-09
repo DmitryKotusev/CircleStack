@@ -10,6 +10,7 @@ TagManager:
   - RestartClipPlayer
   - BackGround
   - RoofPrefabsContainer
+  - GameManager
   layers:
   - Default
   - TransparentFX

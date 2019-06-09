@@ -23,6 +23,8 @@ public class ShopElement : MonoBehaviour
     RawImage image;
     [SerializeField]
     RectTransform imageTransform;
+    [SerializeField]
+    GameObject isEquipedIcon;
     public delegate void SelectElement(ShopElement shopElement);
     public event SelectElement ThisElementSelect;
 
@@ -44,5 +46,15 @@ public class ShopElement : MonoBehaviour
     public void MarkAsUnselected()
     {
         imageTransform.localScale = new Vector3(1, 1, 1);
+    }
+
+    public void MarkAsEquiped()
+    {
+        isEquipedIcon.SetActive(true);
+    }
+
+    public void MarkAsUnequiped()
+    {
+        isEquipedIcon.SetActive(false);
     }
 }

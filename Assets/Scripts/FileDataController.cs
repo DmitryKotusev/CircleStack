@@ -11,7 +11,7 @@ public class FileDataController : MonoBehaviour
     public string coinsKey = "CurrencyAmount";
     public string roofsDataKey = "RoofsData";
 
-    public void InitRootPrefabsContainer()
+    public void InitRoofPrefabsContainer()
     {
         if (File.Exists(Path.Combine(Application.persistentDataPath, roofsDataKey)))
         {
@@ -20,33 +20,46 @@ public class FileDataController : MonoBehaviour
 
             BinaryFormatter bf = new BinaryFormatter();
             FileStream file = File.Open(Path.Combine(Application.persistentDataPath, roofsDataKey), FileMode.Open);
-            RoofSerializableData[] serializableDataArray = (RoofSerializableData[])bf.Deserialize(file);
-            // Записать в дефолтный массив
-            foreach (RoofSerializableData data in serializableDataArray)
+            try
             {
-                RoofPrefabInfo roofPrefabInfo = roofsPrefabsContainer.roofPrefabInfos.Find((roofInfo) =>
+                RoofSerializableData[] serializableDataArray = (RoofSerializableData[])bf.Deserialize(file);
+                // Записать в дефолтный массив
+                foreach (RoofSerializableData data in serializableDataArray)
                 {
-                    return roofInfo.roofsName == data.roofsName;
-                });
-                roofPrefabInfo.isEquiped = data.isEquiped;
-                roofPrefabInfo.isBought = data.isBought;
+                    RoofPrefabInfo roofPrefabInfo = roofsPrefabsContainer.roofPrefabInfos.Find((roofInfo) =>
+                    {
+                        return roofInfo.roofsName == data.roofsName;
+                    });
+                    roofPrefabInfo.isEquiped = data.isEquiped;
+                    roofPrefabInfo.isBought = data.isBought;
+                }
             }
-            file.Close();
+            catch(Exception e)
+            {
+                Debug.Log("Roofs container init error.");
+            }
+            finally
+            {
+                file.Close();
+            }
         }
     }
 
-    public void SynchronizeRootPrefabsContainerWithDataStotage()
+    public void SynchronizeRoofPrefabsContainerWithDataStotage()
     {
         RoofsPrefabsContainer roofsPrefabsContainer =
-            GameObject.FindGameObjectWithTag("RoofsPrefabsContainer").GetComponent<RoofsPrefabsContainer>();
+            GameObject.FindGameObjectWithTag("RoofPrefabsContainer").GetComponent<RoofsPrefabsContainer>();
         BinaryFormatter bf = new BinaryFormatter();
         FileStream file = File.Create(Path.Combine(Application.persistentDataPath, roofsDataKey));
         RoofSerializableData[] serializableDataArray = new RoofSerializableData[roofsPrefabsContainer.roofPrefabInfos.Count];
         for (int i = 0; i < roofsPrefabsContainer.roofPrefabInfos.Count; i++)
         {
-            serializableDataArray[i].isBought = roofsPrefabsContainer.roofPrefabInfos[i].isBought;
-            serializableDataArray[i].isEquiped = roofsPrefabsContainer.roofPrefabInfos[i].isEquiped;
-            serializableDataArray[i].roofsName = roofsPrefabsContainer.roofPrefabInfos[i].roofsName;
+            serializableDataArray[i] = new RoofSerializableData
+            {
+                isBought = roofsPrefabsContainer.roofPrefabInfos[i].isBought,
+                isEquiped = roofsPrefabsContainer.roofPrefabInfos[i].isEquiped,
+                roofsName = roofsPrefabsContainer.roofPrefabInfos[i].roofsName
+            };
         }
         bf.Serialize(file, serializableDataArray);
         file.Close();
