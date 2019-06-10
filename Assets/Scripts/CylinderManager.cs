@@ -181,7 +181,10 @@ public class CylinderManager : MonoBehaviour
         }
         else
         {
-            CylinderFixedNotAccurately?.Invoke();
+            if (!CheckIsGameOver())
+            {
+                CylinderFixedNotAccurately?.Invoke();
+            }
             boostCounter = 0;
             // Звук промаха
             PlayMissClip();
