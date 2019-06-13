@@ -14,6 +14,8 @@ public class ShopManager : MonoBehaviour
     [SerializeField]
     RectTransform shopContent;
     [SerializeField]
+    ScrollRect scrollRect;
+    [SerializeField]
     GameObject shopElementPrefab;
     [SerializeField]
     GameObject equipButton;
@@ -52,16 +54,16 @@ public class ShopManager : MonoBehaviour
         currentlySelectedElement.MarkAsSelected();
 
         buyButtonText.text = currentlySelectedElement.RoofPrefab.price.ToString();
-        adjustButtons();
+        AdjustButtons();
     }
 
     public void InitShop()
     {
         FillShopContent();
-        adjustButtons();
+        AdjustButtons();
     }
 
-    public void adjustButtons()
+    public void AdjustButtons()
     {
         if (currentlySelectedElement == null)
         {
@@ -116,6 +118,9 @@ public class ShopManager : MonoBehaviour
                 shopElementData.MarkAsUnequiped();
             }
         }
+
+        // Move content to top
+        scrollRect.verticalNormalizedPosition = 1;
     }
 
     private void ClearShopContent()
@@ -150,7 +155,7 @@ public class ShopManager : MonoBehaviour
         roofPrefabInfo.isEquiped = true;
         // Synchronize with file storage!!
         FileSynchroRequired?.Invoke();
-        adjustButtons();
+        AdjustButtons();
         Debug.Log("Equip button clicked");
     }
 
@@ -174,7 +179,7 @@ public class ShopManager : MonoBehaviour
         UICurrencySynchroRequired?.Invoke();
         // play accept sound
         // May be some change some UI after buying
-        adjustButtons();
+        AdjustButtons();
         Debug.Log("Buy button clicked");
     }
 }

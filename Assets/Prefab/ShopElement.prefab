@@ -85,6 +85,7 @@ GameObject:
   - component: {fileID: 1296251410946744603}
   - component: {fileID: 1296251410946744600}
   - component: {fileID: 1296251410946744602}
+  - component: {fileID: 3846614530291781141}
   m_Layer: 5
   m_Name: ShopElement
   m_TagString: Untagged
@@ -110,7 +111,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 409, y: -58}
-  m_SizeDelta: {x: 140, y: 130}
+  m_SizeDelta: {x: 140, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1296251410946744603
 CanvasRenderer:
@@ -188,6 +189,20 @@ MonoBehaviour:
   image: {fileID: 1296251409964366722}
   imageTransform: {fileID: 1296251409964366723}
   isEquipedIcon: {fileID: 5351946313117782304}
+--- !u!114 &3846614530291781141
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1296251410946744598}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1254083943, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AspectMode: 1
+  m_AspectRatio: 1.25
 --- !u!1 &5351946313117782304
 GameObject:
   m_ObjectHideFlags: 0
