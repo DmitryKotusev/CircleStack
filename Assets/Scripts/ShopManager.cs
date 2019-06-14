@@ -117,6 +117,14 @@ public class ShopManager : MonoBehaviour
             {
                 shopElementData.MarkAsUnequiped();
             }
+            if (shopElementData.RoofPrefab.isBought)
+            {
+                shopElementData.MarkAsBought();
+            }
+            else
+            {
+                shopElementData.MarkAsUnbought();
+            }
         }
 
         // Move content to top
@@ -175,6 +183,7 @@ public class ShopManager : MonoBehaviour
             return roofInfo.roofsName == currentlySelectedElement.RoofPrefab.roofsName;
         });
         roofPrefabInfo.isBought = true;
+        currentlySelectedElement.MarkAsBought();
         FileSynchroRequired?.Invoke();
         UICurrencySynchroRequired?.Invoke();
         // play accept sound

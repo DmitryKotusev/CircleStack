@@ -25,6 +25,8 @@ public class ShopElement : MonoBehaviour
     RectTransform imageTransform;
     [SerializeField]
     GameObject isEquipedIcon;
+    [SerializeField]
+    GameObject isNotBoughtPanel;
     public delegate void SelectElement(ShopElement shopElement);
     public event SelectElement ThisElementSelect;
 
@@ -56,5 +58,14 @@ public class ShopElement : MonoBehaviour
     public void MarkAsUnequiped()
     {
         isEquipedIcon.SetActive(false);
+    }
+    public void MarkAsBought()
+    {
+        isNotBoughtPanel.SetActive(false);
+    }
+
+    public void MarkAsUnbought()
+    {
+        isNotBoughtPanel.SetActive(true);
     }
 }
