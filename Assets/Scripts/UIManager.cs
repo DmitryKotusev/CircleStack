@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
+    [Header("Camera variables")]
+    public Animator cameraAnimator;
     [Header("Mute button variables")]
     public Image muteButtonImage;
     public Sprite mutedTexture;
@@ -40,6 +42,11 @@ public class UIManager : MonoBehaviour
     void SynchronizeDataWithFileStorage()
     {
         fileDataController.SynchronizeRoofPrefabsContainerWithDataStotage();
+    }
+
+    public void MakeFlash()
+    {
+        cameraAnimator.SetTrigger("Flash");
     }
 
     public void GoToTutorialPanel()
