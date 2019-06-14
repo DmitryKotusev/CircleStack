@@ -6,9 +6,9 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     [Header("Mute button variables")]
-    public RawImage muteButtonImage;
-    public Texture mutedTexture;
-    public Texture unmutedTexture;
+    public Image muteButtonImage;
+    public Sprite mutedTexture;
+    public Sprite unmutedTexture;
     [Header("Panels")]
     public GameObject mainPanel;
     public GameObject tutorialPanel;
@@ -85,13 +85,13 @@ public class UIManager : MonoBehaviour
         if (AudioListener.volume == 1f)
         {
             AudioListener.volume = 0f;
-            muteButtonImage.texture = mutedTexture;
+            muteButtonImage.sprite = mutedTexture;
             return;
         }
         if (AudioListener.volume == 0f)
         {
             AudioListener.volume = 1f;
-            muteButtonImage.texture = unmutedTexture;
+            muteButtonImage.sprite = unmutedTexture;
             return;
         }
     }
